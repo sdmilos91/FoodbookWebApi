@@ -1,0 +1,1003 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="FoodbookModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="AspNetRoles">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="256" Nullable="false" />
+        </EntityType>
+        <EntityType Name="AspNetUserClaims">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserId" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="ClaimType" Type="nvarchar(max)" />
+          <Property Name="ClaimValue" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="AspNetUserLogins">
+          <Key>
+            <PropertyRef Name="LoginProvider" />
+            <PropertyRef Name="ProviderKey" />
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Name="LoginProvider" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="ProviderKey" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="UserId" Type="nvarchar" MaxLength="128" Nullable="false" />
+        </EntityType>
+        <EntityType Name="AspNetUserRoles">
+          <Key>
+            <PropertyRef Name="UserId" />
+            <PropertyRef Name="RoleId" />
+          </Key>
+          <Property Name="UserId" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="RoleId" Type="nvarchar" MaxLength="128" Nullable="false" />
+        </EntityType>
+        <EntityType Name="AspNetUsers">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="Email" Type="nvarchar" MaxLength="256" />
+          <Property Name="EmailConfirmed" Type="bit" Nullable="false" />
+          <Property Name="PasswordHash" Type="nvarchar(max)" />
+          <Property Name="SecurityStamp" Type="nvarchar(max)" />
+          <Property Name="PhoneNumber" Type="nvarchar(max)" />
+          <Property Name="PhoneNumberConfirmed" Type="bit" Nullable="false" />
+          <Property Name="TwoFactorEnabled" Type="bit" Nullable="false" />
+          <Property Name="LockoutEndDateUtc" Type="datetime" />
+          <Property Name="LockoutEnabled" Type="bit" Nullable="false" />
+          <Property Name="AccessFailedCount" Type="int" Nullable="false" />
+          <Property Name="UserName" Type="nvarchar" MaxLength="256" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Caloricity">
+          <Key>
+            <PropertyRef Name="CaloricityId" />
+          </Key>
+          <Property Name="CaloricityId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="MinValue" Type="int" />
+          <Property Name="MaxValue" Type="int" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Cook">
+          <Key>
+            <PropertyRef Name="CookId" />
+          </Key>
+          <Property Name="CookId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ApsUserId" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="FirstName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="LastName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Bio" Type="nvarchar(max)" />
+          <Property Name="PhotoUrl" Type="nvarchar" MaxLength="128" />
+        </EntityType>
+        <EntityType Name="CookComment">
+          <Key>
+            <PropertyRef Name="CommentId" />
+          </Key>
+          <Property Name="CommentId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CommentedCookId" Type="bigint" Nullable="false" />
+          <Property Name="CommentOwnerId" Type="bigint" Nullable="false" />
+          <Property Name="CommentText" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="DateInserted" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Cuisine">
+          <Key>
+            <PropertyRef Name="CuisineId" />
+          </Key>
+          <Property Name="CuisineId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CuisineName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="IsActive" Type="bit" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'Foodbook.dbo.FavouriteRecept' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="FavouriteRecept">
+          <Key>
+            <PropertyRef Name="RecipeId" />
+            <PropertyRef Name="CookId" />
+          </Key>
+          <Property Name="RecipeId" Type="bigint" Nullable="false" />
+          <Property Name="CookId" Type="bigint" Nullable="false" />
+        </EntityType>
+        <EntityType Name="FollowedCook">
+          <Key>
+            <PropertyRef Name="FollowedCookId" />
+            <PropertyRef Name="FollowerCookId" />
+          </Key>
+          <Property Name="FollowedCookId" Type="bigint" Nullable="false" />
+          <Property Name="FollowerCookId" Type="bigint" Nullable="false" />
+        </EntityType>
+        <EntityType Name="FoodCategory">
+          <Key>
+            <PropertyRef Name="CategoryId" />
+          </Key>
+          <Property Name="CategoryId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CategoryName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="IsActive" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Recipe">
+          <Key>
+            <PropertyRef Name="RecipeId" />
+          </Key>
+          <Property Name="RecipeId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CookId" Type="bigint" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="CuisineId" Type="bigint" Nullable="false" />
+          <Property Name="FoodCategoryId" Type="bigint" Nullable="false" />
+          <Property Name="RecipeText" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="VideoUrl" Type="nvarchar" MaxLength="128" />
+          <Property Name="CaloricityId" Type="bigint" />
+          <Property Name="InsertDate" Type="datetime" Nullable="false" />
+          <Property Name="IsEnabled" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="RecipeComment">
+          <Key>
+            <PropertyRef Name="CommentId" />
+          </Key>
+          <Property Name="CommentId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="RecipeId" Type="bigint" Nullable="false" />
+          <Property Name="Rating" Type="int" Nullable="false" />
+          <Property Name="CommentText" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="CookId" Type="bigint" Nullable="false" />
+          <Property Name="DateInserted" Type="datetime" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_Comment_Cook">
+          <End Role="Cook" Type="Self.Cook" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="RecipeComment" Type="Self.RecipeComment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Cook">
+              <PropertyRef Name="CookId" />
+            </Principal>
+            <Dependent Role="RecipeComment">
+              <PropertyRef Name="CookId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Cook_AspNetUsers">
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1" />
+          <End Role="Cook" Type="Self.Cook" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Cook">
+              <PropertyRef Name="ApsUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CookComment_Cook">
+          <End Role="Cook" Type="Self.Cook" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="CookComment" Type="Self.CookComment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Cook">
+              <PropertyRef Name="CookId" />
+            </Principal>
+            <Dependent Role="CookComment">
+              <PropertyRef Name="CommentedCookId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CookComment_Cook1">
+          <End Role="Cook" Type="Self.Cook" Multiplicity="1" />
+          <End Role="CookComment" Type="Self.CookComment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Cook">
+              <PropertyRef Name="CookId" />
+            </Principal>
+            <Dependent Role="CookComment">
+              <PropertyRef Name="CommentOwnerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId">
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="AspNetUserClaims" Type="Self.AspNetUserClaims" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AspNetUserClaims">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId">
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="AspNetUserLogins" Type="Self.AspNetUserLogins" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AspNetUserLogins">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_AspNetUserRoles_dbo_AspNetRoles_RoleId">
+          <End Role="AspNetRoles" Type="Self.AspNetRoles" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="AspNetUserRoles" Type="Self.AspNetUserRoles" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetRoles">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AspNetUserRoles">
+              <PropertyRef Name="RoleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_AspNetUserRoles_dbo_AspNetUsers_UserId">
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="AspNetUserRoles" Type="Self.AspNetUserRoles" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AspNetUserRoles">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_FavouriteRecept_Cook">
+          <End Role="Cook" Type="Self.Cook" Multiplicity="1" />
+          <End Role="FavouriteRecept" Type="Self.FavouriteRecept" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Cook">
+              <PropertyRef Name="CookId" />
+            </Principal>
+            <Dependent Role="FavouriteRecept">
+              <PropertyRef Name="CookId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_FavouriteRecept_Recipe">
+          <End Role="Recipe" Type="Self.Recipe" Multiplicity="1" />
+          <End Role="FavouriteRecept" Type="Self.FavouriteRecept" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Recipe">
+              <PropertyRef Name="RecipeId" />
+            </Principal>
+            <Dependent Role="FavouriteRecept">
+              <PropertyRef Name="RecipeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_FollowedCook_Cook">
+          <End Role="Cook" Type="Self.Cook" Multiplicity="1" />
+          <End Role="FollowedCook" Type="Self.FollowedCook" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Cook">
+              <PropertyRef Name="CookId" />
+            </Principal>
+            <Dependent Role="FollowedCook">
+              <PropertyRef Name="FollowedCookId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_FollowedCook_Cook1">
+          <End Role="Cook" Type="Self.Cook" Multiplicity="1" />
+          <End Role="FollowedCook" Type="Self.FollowedCook" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Cook">
+              <PropertyRef Name="CookId" />
+            </Principal>
+            <Dependent Role="FollowedCook">
+              <PropertyRef Name="FollowerCookId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Recipe_Caloricity">
+          <End Role="Caloricity" Type="Self.Caloricity" Multiplicity="0..1" />
+          <End Role="Recipe" Type="Self.Recipe" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Caloricity">
+              <PropertyRef Name="CaloricityId" />
+            </Principal>
+            <Dependent Role="Recipe">
+              <PropertyRef Name="CaloricityId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Recipe_Cook">
+          <End Role="Cook" Type="Self.Cook" Multiplicity="1" />
+          <End Role="Recipe" Type="Self.Recipe" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Cook">
+              <PropertyRef Name="CookId" />
+            </Principal>
+            <Dependent Role="Recipe">
+              <PropertyRef Name="CookId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RecipeComment_Recipe">
+          <End Role="Recipe" Type="Self.Recipe" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="RecipeComment" Type="Self.RecipeComment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Recipe">
+              <PropertyRef Name="RecipeId" />
+            </Principal>
+            <Dependent Role="RecipeComment">
+              <PropertyRef Name="RecipeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Table_1_Cuisine">
+          <End Role="Cuisine" Type="Self.Cuisine" Multiplicity="1" />
+          <End Role="Recipe" Type="Self.Recipe" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Cuisine">
+              <PropertyRef Name="CuisineId" />
+            </Principal>
+            <Dependent Role="Recipe">
+              <PropertyRef Name="CuisineId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Table_1_FoodCategory">
+          <End Role="FoodCategory" Type="Self.FoodCategory" Multiplicity="1" />
+          <End Role="Recipe" Type="Self.Recipe" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="FoodCategory">
+              <PropertyRef Name="CategoryId" />
+            </Principal>
+            <Dependent Role="Recipe">
+              <PropertyRef Name="FoodCategoryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="FoodbookModelStoreContainer">
+          <EntitySet Name="AspNetRoles" EntityType="Self.AspNetRoles" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="AspNetUserClaims" EntityType="Self.AspNetUserClaims" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="AspNetUserLogins" EntityType="Self.AspNetUserLogins" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="AspNetUserRoles" EntityType="Self.AspNetUserRoles" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="AspNetUsers" EntityType="Self.AspNetUsers" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Caloricity" EntityType="Self.Caloricity" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Cook" EntityType="Self.Cook" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CookComment" EntityType="Self.CookComment" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Cuisine" EntityType="Self.Cuisine" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="FollowedCook" EntityType="Self.FollowedCook" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="FoodCategory" EntityType="Self.FoodCategory" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Recipe" EntityType="Self.Recipe" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="RecipeComment" EntityType="Self.RecipeComment" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="FavouriteRecept" EntityType="Self.FavouriteRecept" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [FavouriteRecept].[RecipeId] AS [RecipeId], 
+    [FavouriteRecept].[CookId] AS [CookId]
+    FROM [dbo].[FavouriteRecept] AS [FavouriteRecept]</DefiningQuery>
+          </EntitySet>
+          <AssociationSet Name="FK_Comment_Cook" Association="Self.FK_Comment_Cook">
+            <End Role="Cook" EntitySet="Cook" />
+            <End Role="RecipeComment" EntitySet="RecipeComment" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Cook_AspNetUsers" Association="Self.FK_Cook_AspNetUsers">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="Cook" EntitySet="Cook" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CookComment_Cook" Association="Self.FK_CookComment_Cook">
+            <End Role="Cook" EntitySet="Cook" />
+            <End Role="CookComment" EntitySet="CookComment" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CookComment_Cook1" Association="Self.FK_CookComment_Cook1">
+            <End Role="Cook" EntitySet="Cook" />
+            <End Role="CookComment" EntitySet="CookComment" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" Association="Self.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="AspNetUserClaims" EntitySet="AspNetUserClaims" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" Association="Self.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="AspNetUserLogins" EntitySet="AspNetUserLogins" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_AspNetUserRoles_dbo_AspNetRoles_RoleId" Association="Self.FK_dbo_AspNetUserRoles_dbo_AspNetRoles_RoleId">
+            <End Role="AspNetRoles" EntitySet="AspNetRoles" />
+            <End Role="AspNetUserRoles" EntitySet="AspNetUserRoles" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_AspNetUserRoles_dbo_AspNetUsers_UserId" Association="Self.FK_dbo_AspNetUserRoles_dbo_AspNetUsers_UserId">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="AspNetUserRoles" EntitySet="AspNetUserRoles" />
+          </AssociationSet>
+          <AssociationSet Name="FK_FavouriteRecept_Cook" Association="Self.FK_FavouriteRecept_Cook">
+            <End Role="Cook" EntitySet="Cook" />
+            <End Role="FavouriteRecept" EntitySet="FavouriteRecept" />
+          </AssociationSet>
+          <AssociationSet Name="FK_FavouriteRecept_Recipe" Association="Self.FK_FavouriteRecept_Recipe">
+            <End Role="Recipe" EntitySet="Recipe" />
+            <End Role="FavouriteRecept" EntitySet="FavouriteRecept" />
+          </AssociationSet>
+          <AssociationSet Name="FK_FollowedCook_Cook" Association="Self.FK_FollowedCook_Cook">
+            <End Role="Cook" EntitySet="Cook" />
+            <End Role="FollowedCook" EntitySet="FollowedCook" />
+          </AssociationSet>
+          <AssociationSet Name="FK_FollowedCook_Cook1" Association="Self.FK_FollowedCook_Cook1">
+            <End Role="Cook" EntitySet="Cook" />
+            <End Role="FollowedCook" EntitySet="FollowedCook" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Recipe_Caloricity" Association="Self.FK_Recipe_Caloricity">
+            <End Role="Caloricity" EntitySet="Caloricity" />
+            <End Role="Recipe" EntitySet="Recipe" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Recipe_Cook" Association="Self.FK_Recipe_Cook">
+            <End Role="Cook" EntitySet="Cook" />
+            <End Role="Recipe" EntitySet="Recipe" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RecipeComment_Recipe" Association="Self.FK_RecipeComment_Recipe">
+            <End Role="Recipe" EntitySet="Recipe" />
+            <End Role="RecipeComment" EntitySet="RecipeComment" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Table_1_Cuisine" Association="Self.FK_Table_1_Cuisine">
+            <End Role="Cuisine" EntitySet="Cuisine" />
+            <End Role="Recipe" EntitySet="Recipe" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Table_1_FoodCategory" Association="Self.FK_Table_1_FoodCategory">
+            <End Role="FoodCategory" EntitySet="FoodCategory" />
+            <End Role="Recipe" EntitySet="Recipe" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="FoodbookModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="FoodbookEntities" annotation:LazyLoadingEnabled="true" >
+          <EntitySet Name="AspNetRoles" EntityType="FoodbookModel.AspNetRole" />
+          <EntitySet Name="AspNetUserClaims" EntityType="FoodbookModel.AspNetUserClaim" />
+          <EntitySet Name="AspNetUserLogins" EntityType="FoodbookModel.AspNetUserLogin" />
+          <EntitySet Name="AspNetUsers" EntityType="FoodbookModel.AspNetUser" />
+          <EntitySet Name="Caloricities" EntityType="FoodbookModel.Caloricity" />
+          <EntitySet Name="Cooks" EntityType="FoodbookModel.Cook" />
+          <EntitySet Name="CookComments" EntityType="FoodbookModel.CookComment" />
+          <EntitySet Name="Cuisines" EntityType="FoodbookModel.Cuisine" />
+          <EntitySet Name="FoodCategories" EntityType="FoodbookModel.FoodCategory" />
+          <EntitySet Name="Recipes" EntityType="FoodbookModel.Recipe" />
+          <EntitySet Name="RecipeComments" EntityType="FoodbookModel.RecipeComment" />
+          <AssociationSet Name="FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" Association="FoodbookModel.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId">
+            <End Role="AspNetUser" EntitySet="AspNetUsers" />
+            <End Role="AspNetUserClaim" EntitySet="AspNetUserClaims" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" Association="FoodbookModel.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId">
+            <End Role="AspNetUser" EntitySet="AspNetUsers" />
+            <End Role="AspNetUserLogin" EntitySet="AspNetUserLogins" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Cook_AspNetUsers" Association="FoodbookModel.FK_Cook_AspNetUsers">
+            <End Role="AspNetUser" EntitySet="AspNetUsers" />
+            <End Role="Cook" EntitySet="Cooks" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Recipe_Caloricity" Association="FoodbookModel.FK_Recipe_Caloricity">
+            <End Role="Caloricity" EntitySet="Caloricities" />
+            <End Role="Recipe" EntitySet="Recipes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Comment_Cook" Association="FoodbookModel.FK_Comment_Cook">
+            <End Role="Cook" EntitySet="Cooks" />
+            <End Role="RecipeComment" EntitySet="RecipeComments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CookComment_Cook" Association="FoodbookModel.FK_CookComment_Cook">
+            <End Role="Cook" EntitySet="Cooks" />
+            <End Role="CookComment" EntitySet="CookComments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CookComment_Cook1" Association="FoodbookModel.FK_CookComment_Cook1">
+            <End Role="Cook" EntitySet="Cooks" />
+            <End Role="CookComment" EntitySet="CookComments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Recipe_Cook" Association="FoodbookModel.FK_Recipe_Cook">
+            <End Role="Cook" EntitySet="Cooks" />
+            <End Role="Recipe" EntitySet="Recipes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Table_1_Cuisine" Association="FoodbookModel.FK_Table_1_Cuisine">
+            <End Role="Cuisine" EntitySet="Cuisines" />
+            <End Role="Recipe" EntitySet="Recipes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Table_1_FoodCategory" Association="FoodbookModel.FK_Table_1_FoodCategory">
+            <End Role="FoodCategory" EntitySet="FoodCategories" />
+            <End Role="Recipe" EntitySet="Recipes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RecipeComment_Recipe" Association="FoodbookModel.FK_RecipeComment_Recipe">
+            <End Role="Recipe" EntitySet="Recipes" />
+            <End Role="RecipeComment" EntitySet="RecipeComments" />
+          </AssociationSet>
+          <AssociationSet Name="AspNetUserRoles" Association="FoodbookModel.AspNetUserRoles">
+            <End Role="AspNetRole" EntitySet="AspNetRoles" />
+            <End Role="AspNetUser" EntitySet="AspNetUsers" />
+          </AssociationSet>
+          <AssociationSet Name="FollowedCook" Association="FoodbookModel.FollowedCook">
+            <End Role="Cook" EntitySet="Cooks" />
+            <End Role="Cook1" EntitySet="Cooks" />
+          </AssociationSet>
+          <AssociationSet Name="FavouriteRecept" Association="FoodbookModel.FavouriteRecept">
+            <End Role="Cook" EntitySet="Cooks" />
+            <End Role="Recipe" EntitySet="Recipes" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="AspNetRole">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="AspNetUsers" Relationship="FoodbookModel.AspNetUserRoles" FromRole="AspNetRole" ToRole="AspNetUser" />
+        </EntityType>
+        <EntityType Name="AspNetUserClaim">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserId" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="ClaimType" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ClaimValue" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="AspNetUser" Relationship="FoodbookModel.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" FromRole="AspNetUserClaim" ToRole="AspNetUser" />
+        </EntityType>
+        <EntityType Name="AspNetUserLogin">
+          <Key>
+            <PropertyRef Name="LoginProvider" />
+            <PropertyRef Name="ProviderKey" />
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Name="LoginProvider" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="ProviderKey" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="UserId" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="AspNetUser" Relationship="FoodbookModel.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" FromRole="AspNetUserLogin" ToRole="AspNetUser" />
+        </EntityType>
+        <EntityType Name="AspNetUser">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="Email" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Name="EmailConfirmed" Type="Boolean" Nullable="false" />
+          <Property Name="PasswordHash" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="SecurityStamp" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PhoneNumber" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PhoneNumberConfirmed" Type="Boolean" Nullable="false" />
+          <Property Name="TwoFactorEnabled" Type="Boolean" Nullable="false" />
+          <Property Name="LockoutEndDateUtc" Type="DateTime" Precision="3" />
+          <Property Name="LockoutEnabled" Type="Boolean" Nullable="false" />
+          <Property Name="AccessFailedCount" Type="Int32" Nullable="false" />
+          <Property Name="UserName" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="AspNetUserClaims" Relationship="FoodbookModel.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" FromRole="AspNetUser" ToRole="AspNetUserClaim" />
+          <NavigationProperty Name="AspNetUserLogins" Relationship="FoodbookModel.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" FromRole="AspNetUser" ToRole="AspNetUserLogin" />
+          <NavigationProperty Name="Cooks" Relationship="FoodbookModel.FK_Cook_AspNetUsers" FromRole="AspNetUser" ToRole="Cook" />
+          <NavigationProperty Name="AspNetRoles" Relationship="FoodbookModel.AspNetUserRoles" FromRole="AspNetUser" ToRole="AspNetRole" />
+        </EntityType>
+        <EntityType Name="Caloricity">
+          <Key>
+            <PropertyRef Name="CaloricityId" />
+          </Key>
+          <Property Name="CaloricityId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="MinValue" Type="Int32" />
+          <Property Name="MaxValue" Type="Int32" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Recipes" Relationship="FoodbookModel.FK_Recipe_Caloricity" FromRole="Caloricity" ToRole="Recipe" />
+        </EntityType>
+        <EntityType Name="Cook">
+          <Key>
+            <PropertyRef Name="CookId" />
+          </Key>
+          <Property Name="CookId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ApsUserId" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="FirstName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="LastName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Bio" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PhotoUrl" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="AspNetUser" Relationship="FoodbookModel.FK_Cook_AspNetUsers" FromRole="Cook" ToRole="AspNetUser" />
+          <NavigationProperty Name="RecipeComments" Relationship="FoodbookModel.FK_Comment_Cook" FromRole="Cook" ToRole="RecipeComment" />
+          <NavigationProperty Name="CookComments" Relationship="FoodbookModel.FK_CookComment_Cook" FromRole="Cook" ToRole="CookComment" />
+          <NavigationProperty Name="CookComments1" Relationship="FoodbookModel.FK_CookComment_Cook1" FromRole="Cook" ToRole="CookComment" />
+          <NavigationProperty Name="Recipes" Relationship="FoodbookModel.FK_Recipe_Cook" FromRole="Cook" ToRole="Recipe" />
+          <NavigationProperty Name="Cook1" Relationship="FoodbookModel.FollowedCook" FromRole="Cook" ToRole="Cook1" />
+          <NavigationProperty Name="Cooks" Relationship="FoodbookModel.FollowedCook" FromRole="Cook1" ToRole="Cook" />
+          <NavigationProperty Name="Recipes1" Relationship="FoodbookModel.FavouriteRecept" FromRole="Cook" ToRole="Recipe" />
+        </EntityType>
+        <EntityType Name="CookComment">
+          <Key>
+            <PropertyRef Name="CommentId" />
+          </Key>
+          <Property Name="CommentId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CommentedCookId" Type="Int64" Nullable="false" />
+          <Property Name="CommentOwnerId" Type="Int64" Nullable="false" />
+          <Property Name="CommentText" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="DateInserted" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Cook" Relationship="FoodbookModel.FK_CookComment_Cook" FromRole="CookComment" ToRole="Cook" />
+          <NavigationProperty Name="Cook1" Relationship="FoodbookModel.FK_CookComment_Cook1" FromRole="CookComment" ToRole="Cook" />
+        </EntityType>
+        <EntityType Name="Cuisine">
+          <Key>
+            <PropertyRef Name="CuisineId" />
+          </Key>
+          <Property Name="CuisineId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CuisineName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Recipes" Relationship="FoodbookModel.FK_Table_1_Cuisine" FromRole="Cuisine" ToRole="Recipe" />
+        </EntityType>
+        <EntityType Name="FoodCategory">
+          <Key>
+            <PropertyRef Name="CategoryId" />
+          </Key>
+          <Property Name="CategoryId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CategoryName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Recipes" Relationship="FoodbookModel.FK_Table_1_FoodCategory" FromRole="FoodCategory" ToRole="Recipe" />
+        </EntityType>
+        <EntityType Name="Recipe">
+          <Key>
+            <PropertyRef Name="RecipeId" />
+          </Key>
+          <Property Name="RecipeId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CookId" Type="Int64" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="CuisineId" Type="Int64" Nullable="false" />
+          <Property Name="FoodCategoryId" Type="Int64" Nullable="false" />
+          <Property Name="RecipeText" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="VideoUrl" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="CaloricityId" Type="Int64" />
+          <Property Name="InsertDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="IsEnabled" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Caloricity" Relationship="FoodbookModel.FK_Recipe_Caloricity" FromRole="Recipe" ToRole="Caloricity" />
+          <NavigationProperty Name="Cook" Relationship="FoodbookModel.FK_Recipe_Cook" FromRole="Recipe" ToRole="Cook" />
+          <NavigationProperty Name="Cuisine" Relationship="FoodbookModel.FK_Table_1_Cuisine" FromRole="Recipe" ToRole="Cuisine" />
+          <NavigationProperty Name="FoodCategory" Relationship="FoodbookModel.FK_Table_1_FoodCategory" FromRole="Recipe" ToRole="FoodCategory" />
+          <NavigationProperty Name="RecipeComments" Relationship="FoodbookModel.FK_RecipeComment_Recipe" FromRole="Recipe" ToRole="RecipeComment" />
+          <NavigationProperty Name="Cooks" Relationship="FoodbookModel.FavouriteRecept" FromRole="Recipe" ToRole="Cook" />
+        </EntityType>
+        <EntityType Name="RecipeComment">
+          <Key>
+            <PropertyRef Name="CommentId" />
+          </Key>
+          <Property Name="CommentId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="RecipeId" Type="Int64" Nullable="false" />
+          <Property Name="Rating" Type="Int32" Nullable="false" />
+          <Property Name="CommentText" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="CookId" Type="Int64" Nullable="false" />
+          <Property Name="DateInserted" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Cook" Relationship="FoodbookModel.FK_Comment_Cook" FromRole="RecipeComment" ToRole="Cook" />
+          <NavigationProperty Name="Recipe" Relationship="FoodbookModel.FK_RecipeComment_Recipe" FromRole="RecipeComment" ToRole="Recipe" />
+        </EntityType>
+        <Association Name="FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId">
+          <End Type="FoodbookModel.AspNetUser" Role="AspNetUser" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="FoodbookModel.AspNetUserClaim" Role="AspNetUserClaim" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUser">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AspNetUserClaim">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId">
+          <End Type="FoodbookModel.AspNetUser" Role="AspNetUser" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="FoodbookModel.AspNetUserLogin" Role="AspNetUserLogin" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUser">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AspNetUserLogin">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Cook_AspNetUsers">
+          <End Type="FoodbookModel.AspNetUser" Role="AspNetUser" Multiplicity="1" />
+          <End Type="FoodbookModel.Cook" Role="Cook" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUser">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Cook">
+              <PropertyRef Name="ApsUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Recipe_Caloricity">
+          <End Type="FoodbookModel.Caloricity" Role="Caloricity" Multiplicity="0..1" />
+          <End Type="FoodbookModel.Recipe" Role="Recipe" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Caloricity">
+              <PropertyRef Name="CaloricityId" />
+            </Principal>
+            <Dependent Role="Recipe">
+              <PropertyRef Name="CaloricityId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Comment_Cook">
+          <End Type="FoodbookModel.Cook" Role="Cook" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="FoodbookModel.RecipeComment" Role="RecipeComment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Cook">
+              <PropertyRef Name="CookId" />
+            </Principal>
+            <Dependent Role="RecipeComment">
+              <PropertyRef Name="CookId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CookComment_Cook">
+          <End Type="FoodbookModel.Cook" Role="Cook" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="FoodbookModel.CookComment" Role="CookComment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Cook">
+              <PropertyRef Name="CookId" />
+            </Principal>
+            <Dependent Role="CookComment">
+              <PropertyRef Name="CommentedCookId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CookComment_Cook1">
+          <End Type="FoodbookModel.Cook" Role="Cook" Multiplicity="1" />
+          <End Type="FoodbookModel.CookComment" Role="CookComment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Cook">
+              <PropertyRef Name="CookId" />
+            </Principal>
+            <Dependent Role="CookComment">
+              <PropertyRef Name="CommentOwnerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Recipe_Cook">
+          <End Type="FoodbookModel.Cook" Role="Cook" Multiplicity="1" />
+          <End Type="FoodbookModel.Recipe" Role="Recipe" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Cook">
+              <PropertyRef Name="CookId" />
+            </Principal>
+            <Dependent Role="Recipe">
+              <PropertyRef Name="CookId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Table_1_Cuisine">
+          <End Type="FoodbookModel.Cuisine" Role="Cuisine" Multiplicity="1" />
+          <End Type="FoodbookModel.Recipe" Role="Recipe" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Cuisine">
+              <PropertyRef Name="CuisineId" />
+            </Principal>
+            <Dependent Role="Recipe">
+              <PropertyRef Name="CuisineId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Table_1_FoodCategory">
+          <End Type="FoodbookModel.FoodCategory" Role="FoodCategory" Multiplicity="1" />
+          <End Type="FoodbookModel.Recipe" Role="Recipe" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="FoodCategory">
+              <PropertyRef Name="CategoryId" />
+            </Principal>
+            <Dependent Role="Recipe">
+              <PropertyRef Name="FoodCategoryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RecipeComment_Recipe">
+          <End Type="FoodbookModel.Recipe" Role="Recipe" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="FoodbookModel.RecipeComment" Role="RecipeComment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Recipe">
+              <PropertyRef Name="RecipeId" />
+            </Principal>
+            <Dependent Role="RecipeComment">
+              <PropertyRef Name="RecipeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="AspNetUserRoles">
+          <End Type="FoodbookModel.AspNetRole" Role="AspNetRole" Multiplicity="*" />
+          <End Type="FoodbookModel.AspNetUser" Role="AspNetUser" Multiplicity="*" />
+        </Association>
+        <Association Name="FollowedCook">
+          <End Type="FoodbookModel.Cook" Role="Cook" Multiplicity="*" />
+          <End Type="FoodbookModel.Cook" Role="Cook1" Multiplicity="*" />
+        </Association>
+        <Association Name="FavouriteRecept">
+          <End Type="FoodbookModel.Cook" Role="Cook" Multiplicity="*" />
+          <End Type="FoodbookModel.Recipe" Role="Recipe" Multiplicity="*" />
+        </Association>
+        </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="FoodbookModelStoreContainer" CdmEntityContainer="FoodbookEntities" >
+          <EntitySetMapping Name="AspNetRoles">
+            <EntityTypeMapping TypeName="FoodbookModel.AspNetRole">
+              <MappingFragment StoreEntitySet="AspNetRoles">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AspNetUserClaims">
+            <EntityTypeMapping TypeName="FoodbookModel.AspNetUserClaim">
+              <MappingFragment StoreEntitySet="AspNetUserClaims">
+                <ScalarProperty Name="ClaimValue" ColumnName="ClaimValue" />
+                <ScalarProperty Name="ClaimType" ColumnName="ClaimType" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AspNetUserLogins">
+            <EntityTypeMapping TypeName="FoodbookModel.AspNetUserLogin">
+              <MappingFragment StoreEntitySet="AspNetUserLogins">
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="ProviderKey" ColumnName="ProviderKey" />
+                <ScalarProperty Name="LoginProvider" ColumnName="LoginProvider" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AspNetUsers">
+            <EntityTypeMapping TypeName="FoodbookModel.AspNetUser">
+              <MappingFragment StoreEntitySet="AspNetUsers">
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="AccessFailedCount" ColumnName="AccessFailedCount" />
+                <ScalarProperty Name="LockoutEnabled" ColumnName="LockoutEnabled" />
+                <ScalarProperty Name="LockoutEndDateUtc" ColumnName="LockoutEndDateUtc" />
+                <ScalarProperty Name="TwoFactorEnabled" ColumnName="TwoFactorEnabled" />
+                <ScalarProperty Name="PhoneNumberConfirmed" ColumnName="PhoneNumberConfirmed" />
+                <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
+                <ScalarProperty Name="SecurityStamp" ColumnName="SecurityStamp" />
+                <ScalarProperty Name="PasswordHash" ColumnName="PasswordHash" />
+                <ScalarProperty Name="EmailConfirmed" ColumnName="EmailConfirmed" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Caloricities">
+            <EntityTypeMapping TypeName="FoodbookModel.Caloricity">
+              <MappingFragment StoreEntitySet="Caloricity">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="MaxValue" ColumnName="MaxValue" />
+                <ScalarProperty Name="MinValue" ColumnName="MinValue" />
+                <ScalarProperty Name="CaloricityId" ColumnName="CaloricityId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Cooks">
+            <EntityTypeMapping TypeName="FoodbookModel.Cook">
+              <MappingFragment StoreEntitySet="Cook">
+                <ScalarProperty Name="PhotoUrl" ColumnName="PhotoUrl" />
+                <ScalarProperty Name="Bio" ColumnName="Bio" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="ApsUserId" ColumnName="ApsUserId" />
+                <ScalarProperty Name="CookId" ColumnName="CookId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CookComments">
+            <EntityTypeMapping TypeName="FoodbookModel.CookComment">
+              <MappingFragment StoreEntitySet="CookComment">
+                <ScalarProperty Name="DateInserted" ColumnName="DateInserted" />
+                <ScalarProperty Name="CommentText" ColumnName="CommentText" />
+                <ScalarProperty Name="CommentOwnerId" ColumnName="CommentOwnerId" />
+                <ScalarProperty Name="CommentedCookId" ColumnName="CommentedCookId" />
+                <ScalarProperty Name="CommentId" ColumnName="CommentId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Cuisines">
+            <EntityTypeMapping TypeName="FoodbookModel.Cuisine">
+              <MappingFragment StoreEntitySet="Cuisine">
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="CuisineName" ColumnName="CuisineName" />
+                <ScalarProperty Name="CuisineId" ColumnName="CuisineId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="FoodCategories">
+            <EntityTypeMapping TypeName="FoodbookModel.FoodCategory">
+              <MappingFragment StoreEntitySet="FoodCategory">
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="CategoryName" ColumnName="CategoryName" />
+                <ScalarProperty Name="CategoryId" ColumnName="CategoryId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Recipes">
+            <EntityTypeMapping TypeName="FoodbookModel.Recipe">
+              <MappingFragment StoreEntitySet="Recipe">
+                <ScalarProperty Name="IsEnabled" ColumnName="IsEnabled" />
+                <ScalarProperty Name="InsertDate" ColumnName="InsertDate" />
+                <ScalarProperty Name="CaloricityId" ColumnName="CaloricityId" />
+                <ScalarProperty Name="VideoUrl" ColumnName="VideoUrl" />
+                <ScalarProperty Name="RecipeText" ColumnName="RecipeText" />
+                <ScalarProperty Name="FoodCategoryId" ColumnName="FoodCategoryId" />
+                <ScalarProperty Name="CuisineId" ColumnName="CuisineId" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="CookId" ColumnName="CookId" />
+                <ScalarProperty Name="RecipeId" ColumnName="RecipeId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RecipeComments">
+            <EntityTypeMapping TypeName="FoodbookModel.RecipeComment">
+              <MappingFragment StoreEntitySet="RecipeComment">
+                <ScalarProperty Name="DateInserted" ColumnName="DateInserted" />
+                <ScalarProperty Name="CookId" ColumnName="CookId" />
+                <ScalarProperty Name="CommentText" ColumnName="CommentText" />
+                <ScalarProperty Name="Rating" ColumnName="Rating" />
+                <ScalarProperty Name="RecipeId" ColumnName="RecipeId" />
+                <ScalarProperty Name="CommentId" ColumnName="CommentId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="AspNetUserRoles" TypeName="FoodbookModel.AspNetUserRoles" StoreEntitySet="AspNetUserRoles">
+            <EndProperty Name="AspNetUser">
+              <ScalarProperty Name="Id" ColumnName="UserId" />
+            </EndProperty>
+            <EndProperty Name="AspNetRole">
+              <ScalarProperty Name="Id" ColumnName="RoleId" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="FollowedCook" TypeName="FoodbookModel.FollowedCook" StoreEntitySet="FollowedCook">
+            <EndProperty Name="Cook1">
+              <ScalarProperty Name="CookId" ColumnName="FollowerCookId" />
+            </EndProperty>
+            <EndProperty Name="Cook">
+              <ScalarProperty Name="CookId" ColumnName="FollowedCookId" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="FavouriteRecept" TypeName="FoodbookModel.FavouriteRecept" StoreEntitySet="FavouriteRecept">
+            <EndProperty Name="Recipe">
+              <ScalarProperty Name="RecipeId" ColumnName="RecipeId" />
+            </EndProperty>
+            <EndProperty Name="Cook">
+              <ScalarProperty Name="CookId" ColumnName="CookId" />
+            </EndProperty>
+          </AssociationSetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

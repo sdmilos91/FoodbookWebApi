@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="77ed68a2826c4249a291d33d1ecd4251" Name="Diagram1" >
+        <EntityTypeShape EntityType="FoodbookModel.AspNetRole" Width="1.5" PointX="0.75" PointY="8.75" />
+        <EntityTypeShape EntityType="FoodbookModel.AspNetUserClaim" Width="1.5" PointX="5.25" PointY="5" />
+        <EntityTypeShape EntityType="FoodbookModel.AspNetUserLogin" Width="1.5" PointX="5.25" PointY="7.75" />
+        <EntityTypeShape EntityType="FoodbookModel.AspNetUser" Width="1.5" PointX="3" PointY="7.5" />
+        <EntityTypeShape EntityType="FoodbookModel.Caloricity" Width="1.5" PointX="5.25" PointY="15.125" />
+        <EntityTypeShape EntityType="FoodbookModel.Cook" Width="1.5" PointX="5.25" PointY="10.25" />
+        <EntityTypeShape EntityType="FoodbookModel.CookComment" Width="1.5" PointX="7.5" PointY="19.125" />
+        <EntityTypeShape EntityType="FoodbookModel.Cuisine" Width="1.5" PointX="5.25" PointY="1.625" />
+        <EntityTypeShape EntityType="FoodbookModel.FoodCategory" Width="1.5" PointX="5.25" PointY="17.875" />
+        <EntityTypeShape EntityType="FoodbookModel.Recipe" Width="1.5" PointX="7.5" PointY="10.125" />
+        <EntityTypeShape EntityType="FoodbookModel.RecipeComment" Width="1.5" PointX="9.75" PointY="10.875" />
+        <AssociationConnector Association="FoodbookModel.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" />
+        <AssociationConnector Association="FoodbookModel.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" />
+        <AssociationConnector Association="FoodbookModel.FK_Cook_AspNetUsers" />
+        <AssociationConnector Association="FoodbookModel.FK_Recipe_Caloricity" />
+        <AssociationConnector Association="FoodbookModel.FK_Comment_Cook" />
+        <AssociationConnector Association="FoodbookModel.FK_CookComment_Cook" />
+        <AssociationConnector Association="FoodbookModel.FK_CookComment_Cook1" />
+        <AssociationConnector Association="FoodbookModel.FK_Recipe_Cook" />
+        <AssociationConnector Association="FoodbookModel.FK_Table_1_Cuisine" />
+        <AssociationConnector Association="FoodbookModel.FK_Table_1_FoodCategory" />
+        <AssociationConnector Association="FoodbookModel.FK_RecipeComment_Recipe" />
+        <AssociationConnector Association="FoodbookModel.AspNetUserRoles" />
+        <AssociationConnector Association="FoodbookModel.FollowedCook" />
+        <AssociationConnector Association="FoodbookModel.FavouriteRecept" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
