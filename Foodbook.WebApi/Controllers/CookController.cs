@@ -93,13 +93,14 @@ namespace Foodbook.WebApi.Controllers
                 CategoryId = x.FoodCategoryId,
                 CategoryName = x.FoodCategory.CategoryName,
                 CuisineId = x.CuisineId,
-                CausineName = x.Cuisine.CuisineName,
+                CuisineName = x.Cuisine.CuisineName,
                 CookName = string.Join(" ", x.Cook.FirstName, x.Cook.LastName),
                 VideoUrl = x.VideoUrl,
                 InsertDate = x.InsertDate,
                 Rating = x.RecipeComments.Any() ? (double?)x.RecipeComments.Sum(z => z.Rating) / x.RecipeComments.Count() : null,
                 RecipeText = x.RecipeText,
-                Comments = x.RecipeComments.ToList().Select(z => new CommentModel
+                PreparationTime = x.PreparationTime,
+                Comments = x.RecipeComments.ToList().Select(z => new RecipeCommentModel
                 {
                     CommentId = z.CommentId,
                     CookId = z.CookId,

@@ -18,6 +18,7 @@ namespace Foodbook.DataAccess
         public Recipe()
         {
             this.RecipeComments = new HashSet<RecipeComment>();
+            this.RecipeImages = new HashSet<RecipeImage>();
             this.Cooks = new HashSet<Cook>();
         }
     
@@ -31,6 +32,7 @@ namespace Foodbook.DataAccess
         public Nullable<long> CaloricityId { get; set; }
         public System.DateTime InsertDate { get; set; }
         public bool IsEnabled { get; set; }
+        public int PreparationTime { get; set; }
     
         public virtual Caloricity Caloricity { get; set; }
         public virtual Cook Cook { get; set; }
@@ -38,6 +40,8 @@ namespace Foodbook.DataAccess
         public virtual FoodCategory FoodCategory { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<RecipeComment> RecipeComments { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<RecipeImage> RecipeImages { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Cook> Cooks { get; set; }
     }

@@ -12,7 +12,7 @@ namespace Foodbook.WebApi.Models
         public string CookName { get; set; }
         public string Name { get; set; }
         public long CuisineId { get; set; }
-        public string CausineName { get; set; }
+        public string CuisineName { get; set; }
         public long CategoryId { get; set; }
         public string CategoryName { get; set; }
         public string RecipeText { get; set; }
@@ -22,6 +22,9 @@ namespace Foodbook.WebApi.Models
         public DateTime InsertDate { get; set; }
         public List<RecipeCommentModel> Comments { get; set; }
         public double? Rating { get; set; }
+        public int PreparationTime { get; set; }
+
+        public List<PhotoModel> Photos { get; set; }
     }
 
     public class RecipeCommentModel
@@ -43,6 +46,17 @@ namespace Foodbook.WebApi.Models
         public string RecipeText { get; set; }
         public string VideoUrl { get; set; }
         public long? CaloricityId { get; set; }
+        public int PreparationTime { get; set; }
+        public List<PhotoModel> Photos { get; set; }
+    }
+
+
+    public class PhotoModel
+    {
+        public string Url { get; set; }
+
+        public string Name { get; set; }
+
     }
 }
 

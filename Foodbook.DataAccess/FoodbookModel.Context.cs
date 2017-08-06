@@ -36,5 +36,6 @@ namespace Foodbook.DataAccess
         public virtual DbSet<FoodCategory> FoodCategories { get; set; }
         public virtual DbSet<Recipe> Recipes { get; set; }
         public virtual DbSet<RecipeComment> RecipeComments { get; set; }
+        public virtual DbSet<RecipeImage> RecipeImages { get; set; }
     }
 }

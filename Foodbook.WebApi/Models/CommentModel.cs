@@ -14,8 +14,6 @@ namespace Foodbook.WebApi.Models
         [Required]
         public string CommentText { get; set; }
 
-        public long CookId { get; set; }
-
         public long RecipeId { get; set; }
         
         public DateTime InsertDate { get; set; }

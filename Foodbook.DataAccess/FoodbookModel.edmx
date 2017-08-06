@@ -134,6 +134,7 @@ warning 6002: The table/view 'Foodbook.dbo.FavouriteRecept' does not have a prim
           <Property Name="CaloricityId" Type="bigint" />
           <Property Name="InsertDate" Type="datetime" Nullable="false" />
           <Property Name="IsEnabled" Type="bit" Nullable="false" />
+          <Property Name="PreparationTime" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="RecipeComment">
           <Key>
@@ -145,6 +146,15 @@ warning 6002: The table/view 'Foodbook.dbo.FavouriteRecept' does not have a prim
           <Property Name="CommentText" Type="nvarchar(max)" Nullable="false" />
           <Property Name="CookId" Type="bigint" Nullable="false" />
           <Property Name="DateInserted" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="RecipeImage">
+          <Key>
+            <PropertyRef Name="ImageId" />
+          </Key>
+          <Property Name="ImageId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="RecipeId" Type="bigint" Nullable="false" />
+          <Property Name="PhotoUrl" Type="nvarchar" MaxLength="256" Nullable="false" />
+          <Property Name="InsertDate" Type="datetime" Nullable="false" />
         </EntityType>
         <Association Name="FK_Comment_Cook">
           <End Role="Cook" Type="Self.Cook" Multiplicity="1">
@@ -340,6 +350,20 @@ warning 6002: The table/view 'Foodbook.dbo.FavouriteRecept' does not have a prim
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_RecipeImage_Recipe">
+          <End Role="Recipe" Type="Self.Recipe" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="RecipeImage" Type="Self.RecipeImage" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Recipe">
+              <PropertyRef Name="RecipeId" />
+            </Principal>
+            <Dependent Role="RecipeImage">
+              <PropertyRef Name="RecipeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Table_1_Cuisine">
           <End Role="Cuisine" Type="Self.Cuisine" Multiplicity="1" />
           <End Role="Recipe" Type="Self.Recipe" Multiplicity="*" />
@@ -378,6 +402,7 @@ warning 6002: The table/view 'Foodbook.dbo.FavouriteRecept' does not have a prim
           <EntitySet Name="FoodCategory" EntityType="Self.FoodCategory" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Recipe" EntityType="Self.Recipe" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="RecipeComment" EntityType="Self.RecipeComment" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="RecipeImage" EntityType="Self.RecipeImage" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="FavouriteRecept" EntityType="Self.FavouriteRecept" store:Type="Tables" store:Schema="dbo">
             <DefiningQuery>SELECT 
     [FavouriteRecept].[RecipeId] AS [RecipeId], 
@@ -444,6 +469,10 @@ warning 6002: The table/view 'Foodbook.dbo.FavouriteRecept' does not have a prim
             <End Role="Recipe" EntitySet="Recipe" />
             <End Role="RecipeComment" EntitySet="RecipeComment" />
           </AssociationSet>
+          <AssociationSet Name="FK_RecipeImage_Recipe" Association="Self.FK_RecipeImage_Recipe">
+            <End Role="Recipe" EntitySet="Recipe" />
+            <End Role="RecipeImage" EntitySet="RecipeImage" />
+          </AssociationSet>
           <AssociationSet Name="FK_Table_1_Cuisine" Association="Self.FK_Table_1_Cuisine">
             <End Role="Cuisine" EntitySet="Cuisine" />
             <End Role="Recipe" EntitySet="Recipe" />
@@ -469,6 +498,7 @@ warning 6002: The table/view 'Foodbook.dbo.FavouriteRecept' does not have a prim
           <EntitySet Name="FoodCategories" EntityType="FoodbookModel.FoodCategory" />
           <EntitySet Name="Recipes" EntityType="FoodbookModel.Recipe" />
           <EntitySet Name="RecipeComments" EntityType="FoodbookModel.RecipeComment" />
+          <EntitySet Name="RecipeImages" EntityType="FoodbookModel.RecipeImage" />
           <AssociationSet Name="FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" Association="FoodbookModel.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId">
             <End Role="AspNetUser" EntitySet="AspNetUsers" />
             <End Role="AspNetUserClaim" EntitySet="AspNetUserClaims" />
@@ -512,6 +542,10 @@ warning 6002: The table/view 'Foodbook.dbo.FavouriteRecept' does not have a prim
           <AssociationSet Name="FK_RecipeComment_Recipe" Association="FoodbookModel.FK_RecipeComment_Recipe">
             <End Role="Recipe" EntitySet="Recipes" />
             <End Role="RecipeComment" EntitySet="RecipeComments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RecipeImage_Recipe" Association="FoodbookModel.FK_RecipeImage_Recipe">
+            <End Role="Recipe" EntitySet="Recipes" />
+            <End Role="RecipeImage" EntitySet="RecipeImages" />
           </AssociationSet>
           <AssociationSet Name="AspNetUserRoles" Association="FoodbookModel.AspNetUserRoles">
             <End Role="AspNetRole" EntitySet="AspNetRoles" />
@@ -649,11 +683,13 @@ warning 6002: The table/view 'Foodbook.dbo.FavouriteRecept' does not have a prim
           <Property Name="CaloricityId" Type="Int64" />
           <Property Name="InsertDate" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="IsEnabled" Type="Boolean" Nullable="false" />
+          <Property Name="PreparationTime" Type="Int32" Nullable="false" />
           <NavigationProperty Name="Caloricity" Relationship="FoodbookModel.FK_Recipe_Caloricity" FromRole="Recipe" ToRole="Caloricity" />
           <NavigationProperty Name="Cook" Relationship="FoodbookModel.FK_Recipe_Cook" FromRole="Recipe" ToRole="Cook" />
           <NavigationProperty Name="Cuisine" Relationship="FoodbookModel.FK_Table_1_Cuisine" FromRole="Recipe" ToRole="Cuisine" />
           <NavigationProperty Name="FoodCategory" Relationship="FoodbookModel.FK_Table_1_FoodCategory" FromRole="Recipe" ToRole="FoodCategory" />
           <NavigationProperty Name="RecipeComments" Relationship="FoodbookModel.FK_RecipeComment_Recipe" FromRole="Recipe" ToRole="RecipeComment" />
+          <NavigationProperty Name="RecipeImages" Relationship="FoodbookModel.FK_RecipeImage_Recipe" FromRole="Recipe" ToRole="RecipeImage" />
           <NavigationProperty Name="Cooks" Relationship="FoodbookModel.FavouriteRecept" FromRole="Recipe" ToRole="Cook" />
         </EntityType>
         <EntityType Name="RecipeComment">
@@ -668,6 +704,16 @@ warning 6002: The table/view 'Foodbook.dbo.FavouriteRecept' does not have a prim
           <Property Name="DateInserted" Type="DateTime" Nullable="false" Precision="3" />
           <NavigationProperty Name="Cook" Relationship="FoodbookModel.FK_Comment_Cook" FromRole="RecipeComment" ToRole="Cook" />
           <NavigationProperty Name="Recipe" Relationship="FoodbookModel.FK_RecipeComment_Recipe" FromRole="RecipeComment" ToRole="Recipe" />
+        </EntityType>
+        <EntityType Name="RecipeImage">
+          <Key>
+            <PropertyRef Name="ImageId" />
+          </Key>
+          <Property Name="ImageId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="RecipeId" Type="Int64" Nullable="false" />
+          <Property Name="PhotoUrl" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Name="InsertDate" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Recipe" Relationship="FoodbookModel.FK_RecipeImage_Recipe" FromRole="RecipeImage" ToRole="Recipe" />
         </EntityType>
         <Association Name="FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId">
           <End Type="FoodbookModel.AspNetUser" Role="AspNetUser" Multiplicity="1">
@@ -811,6 +857,20 @@ warning 6002: The table/view 'Foodbook.dbo.FavouriteRecept' does not have a prim
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_RecipeImage_Recipe">
+          <End Type="FoodbookModel.Recipe" Role="Recipe" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="FoodbookModel.RecipeImage" Role="RecipeImage" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Recipe">
+              <PropertyRef Name="RecipeId" />
+            </Principal>
+            <Dependent Role="RecipeImage">
+              <PropertyRef Name="RecipeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="AspNetUserRoles">
           <End Type="FoodbookModel.AspNetRole" Role="AspNetRole" Multiplicity="*" />
           <End Type="FoodbookModel.AspNetUser" Role="AspNetUser" Multiplicity="*" />
@@ -928,6 +988,7 @@ warning 6002: The table/view 'Foodbook.dbo.FavouriteRecept' does not have a prim
           <EntitySetMapping Name="Recipes">
             <EntityTypeMapping TypeName="FoodbookModel.Recipe">
               <MappingFragment StoreEntitySet="Recipe">
+                <ScalarProperty Name="PreparationTime" ColumnName="PreparationTime" />
                 <ScalarProperty Name="IsEnabled" ColumnName="IsEnabled" />
                 <ScalarProperty Name="InsertDate" ColumnName="InsertDate" />
                 <ScalarProperty Name="CaloricityId" ColumnName="CaloricityId" />
@@ -950,6 +1011,16 @@ warning 6002: The table/view 'Foodbook.dbo.FavouriteRecept' does not have a prim
                 <ScalarProperty Name="Rating" ColumnName="Rating" />
                 <ScalarProperty Name="RecipeId" ColumnName="RecipeId" />
                 <ScalarProperty Name="CommentId" ColumnName="CommentId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RecipeImages">
+            <EntityTypeMapping TypeName="FoodbookModel.RecipeImage">
+              <MappingFragment StoreEntitySet="RecipeImage">
+                <ScalarProperty Name="InsertDate" ColumnName="InsertDate" />
+                <ScalarProperty Name="PhotoUrl" ColumnName="PhotoUrl" />
+                <ScalarProperty Name="RecipeId" ColumnName="RecipeId" />
+                <ScalarProperty Name="ImageId" ColumnName="ImageId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

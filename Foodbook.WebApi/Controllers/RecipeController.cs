@@ -37,13 +37,13 @@ namespace Foodbook.WebApi.Controllers
             }
         }
 
-        public IHttpActionResult Get(string text = "", long? categoryId = null, long? cousineId = null)
+        public IHttpActionResult Get(string text = "", long? categoryId = null, long? cuisineId = null)
         {
             try
             {
                 List<Recipe> recipes = DbContext.Recipes.Where(x => (string.IsNullOrEmpty(text) ? true : x.Name.ToLower().Contains(text.ToLower()))
                                                                  && (categoryId.HasValue ? x.FoodCategoryId == categoryId.Value : true)
-                                                                 && (cousineId.HasValue ? x.CuisineId == cousineId.Value : true)
+                                                                 && (cuisineId.HasValue ? x.CuisineId == cuisineId.Value : true)
                                                                 ).ToList();
 
                 List<RecipeModel> models = recipes.Select(x => InitRecipeModel(x)).ToList();
@@ -76,8 +76,18 @@ namespace Foodbook.WebApi.Controllers
                         CuisineId = model.CuisineId,
                         CaloricityId = model.CaloricityId,
                         InsertDate = DateTime.UtcNow,
-                        IsEnabled = true
+                        IsEnabled = true,
+                        PreparationTime = model.PreparationTime
                     };
+
+                    foreach (var item in model.Photos)
+                    {
+                        recipe.RecipeImages.Add(new RecipeImage
+                        {
+                            InsertDate = DateTime.Now,
+                            PhotoUrl = item.Url
+                        });
+                    }
 
                     DbContext.Recipes.Add(recipe);
                     DbContext.SaveChanges();
@@ -108,13 +118,14 @@ namespace Foodbook.WebApi.Controllers
                 CategoryId = x.FoodCategoryId,
                 CategoryName = x.FoodCategory.CategoryName,
                 CuisineId = x.CuisineId,
-                CausineName = x.Cuisine.CuisineName,
+                CuisineName = x.Cuisine.CuisineName,
                 CookName = string.Join(" ", x.Cook.FirstName, x.Cook.LastName),
                 VideoUrl = x.VideoUrl,
                 InsertDate = x.InsertDate,
                 Rating = x.RecipeComments.Any() ? (double?)x.RecipeComments.Sum(z => z.Rating) / x.RecipeComments.Count() : null,
                 RecipeText = x.RecipeText,
-                Comments = x.RecipeComments.ToList().Select(z => new CommentModel
+                PreparationTime = x.PreparationTime,
+                Comments = x.RecipeComments.ToList().Select(z => new RecipeCommentModel
                 {
                     CommentId = z.CommentId,
                     CookId = z.CookId,
@@ -123,6 +134,10 @@ namespace Foodbook.WebApi.Controllers
                     InsertDate = z.DateInserted,
                     Rating = z.Rating
 
+                }).ToList(),
+                Photos = x.RecipeImages.Select(z => new PhotoModel
+                {
+                    Url = z.PhotoUrl
                 }).ToList()
             };
         }
