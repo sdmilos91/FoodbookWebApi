@@ -338,7 +338,7 @@ namespace Foodbook.WebApi.Controllers
                 return GetErrorResult(result);
             }
 
-            using (FoodbookEntities context = new FoodbookEntities())
+            using (FoodBookEntities context = new FoodBookEntities())
             {
                 Cook cook = new Cook
                 {

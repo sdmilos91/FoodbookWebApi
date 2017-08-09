@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="FoodbookModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="FoodBookModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="AspNetRoles">
           <Key>
             <PropertyRef Name="Id" />
@@ -56,7 +56,7 @@
           <Property Name="AccessFailedCount" Type="int" Nullable="false" />
           <Property Name="UserName" Type="nvarchar" MaxLength="256" Nullable="false" />
         </EntityType>
-        <EntityType Name="Caloricity">
+        <EntityType Name="Caloricities">
           <Key>
             <PropertyRef Name="CaloricityId" />
           </Key>
@@ -65,7 +65,17 @@
           <Property Name="MaxValue" Type="int" />
           <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
         </EntityType>
-        <EntityType Name="Cook">
+        <EntityType Name="CookComments">
+          <Key>
+            <PropertyRef Name="CommentId" />
+          </Key>
+          <Property Name="CommentId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CommentedCookId" Type="bigint" Nullable="false" />
+          <Property Name="CommentOwnerId" Type="bigint" Nullable="false" />
+          <Property Name="CommentText" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="DateInserted" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Cooks">
           <Key>
             <PropertyRef Name="CookId" />
           </Key>
@@ -76,17 +86,7 @@
           <Property Name="Bio" Type="nvarchar(max)" />
           <Property Name="PhotoUrl" Type="nvarchar" MaxLength="128" />
         </EntityType>
-        <EntityType Name="CookComment">
-          <Key>
-            <PropertyRef Name="CommentId" />
-          </Key>
-          <Property Name="CommentId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="CommentedCookId" Type="bigint" Nullable="false" />
-          <Property Name="CommentOwnerId" Type="bigint" Nullable="false" />
-          <Property Name="CommentText" Type="nvarchar(max)" Nullable="false" />
-          <Property Name="DateInserted" Type="datetime" Nullable="false" />
-        </EntityType>
-        <EntityType Name="Cuisine">
+        <EntityType Name="Cuisines">
           <Key>
             <PropertyRef Name="CuisineId" />
           </Key>
@@ -94,25 +94,23 @@
           <Property Name="CuisineName" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="IsActive" Type="bit" Nullable="false" />
         </EntityType>
-        <!--Errors Found During Generation:
-warning 6002: The table/view 'Foodbook.dbo.FavouriteRecept' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="FavouriteRecept">
           <Key>
-            <PropertyRef Name="RecipeId" />
-            <PropertyRef Name="CookId" />
+            <PropertyRef Name="Cooks_CookId" />
+            <PropertyRef Name="Recipes1_RecipeId" />
           </Key>
-          <Property Name="RecipeId" Type="bigint" Nullable="false" />
-          <Property Name="CookId" Type="bigint" Nullable="false" />
+          <Property Name="Cooks_CookId" Type="bigint" Nullable="false" />
+          <Property Name="Recipes1_RecipeId" Type="bigint" Nullable="false" />
         </EntityType>
         <EntityType Name="FollowedCook">
           <Key>
-            <PropertyRef Name="FollowedCookId" />
-            <PropertyRef Name="FollowerCookId" />
+            <PropertyRef Name="Cooks_CookId" />
+            <PropertyRef Name="Cook1_CookId" />
           </Key>
-          <Property Name="FollowedCookId" Type="bigint" Nullable="false" />
-          <Property Name="FollowerCookId" Type="bigint" Nullable="false" />
+          <Property Name="Cooks_CookId" Type="bigint" Nullable="false" />
+          <Property Name="Cook1_CookId" Type="bigint" Nullable="false" />
         </EntityType>
-        <EntityType Name="FoodCategory">
+        <EntityType Name="FoodCategories">
           <Key>
             <PropertyRef Name="CategoryId" />
           </Key>
@@ -120,7 +118,27 @@ warning 6002: The table/view 'Foodbook.dbo.FavouriteRecept' does not have a prim
           <Property Name="CategoryName" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="IsActive" Type="bit" Nullable="false" />
         </EntityType>
-        <EntityType Name="Recipe">
+        <EntityType Name="RecipeComments">
+          <Key>
+            <PropertyRef Name="CommentId" />
+          </Key>
+          <Property Name="CommentId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="RecipeId" Type="bigint" Nullable="false" />
+          <Property Name="Rating" Type="int" Nullable="false" />
+          <Property Name="CommentText" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="CookId" Type="bigint" Nullable="false" />
+          <Property Name="DateInserted" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="RecipeImages">
+          <Key>
+            <PropertyRef Name="ImageId" />
+          </Key>
+          <Property Name="ImageId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="RecipeId" Type="bigint" Nullable="false" />
+          <Property Name="PhotoUrl" Type="nvarchar" MaxLength="256" Nullable="false" />
+          <Property Name="InsertDate" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Recipes">
           <Key>
             <PropertyRef Name="RecipeId" />
           </Key>
@@ -136,75 +154,55 @@ warning 6002: The table/view 'Foodbook.dbo.FavouriteRecept' does not have a prim
           <Property Name="IsEnabled" Type="bit" Nullable="false" />
           <Property Name="PreparationTime" Type="int" Nullable="false" />
         </EntityType>
-        <EntityType Name="RecipeComment">
-          <Key>
-            <PropertyRef Name="CommentId" />
-          </Key>
-          <Property Name="CommentId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="RecipeId" Type="bigint" Nullable="false" />
-          <Property Name="Rating" Type="int" Nullable="false" />
-          <Property Name="CommentText" Type="nvarchar(max)" Nullable="false" />
-          <Property Name="CookId" Type="bigint" Nullable="false" />
-          <Property Name="DateInserted" Type="datetime" Nullable="false" />
-        </EntityType>
-        <EntityType Name="RecipeImage">
-          <Key>
-            <PropertyRef Name="ImageId" />
-          </Key>
-          <Property Name="ImageId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="RecipeId" Type="bigint" Nullable="false" />
-          <Property Name="PhotoUrl" Type="nvarchar" MaxLength="256" Nullable="false" />
-          <Property Name="InsertDate" Type="datetime" Nullable="false" />
-        </EntityType>
         <Association Name="FK_Comment_Cook">
-          <End Role="Cook" Type="Self.Cook" Multiplicity="1">
+          <End Role="Cooks" Type="Self.Cooks" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
-          <End Role="RecipeComment" Type="Self.RecipeComment" Multiplicity="*" />
+          <End Role="RecipeComments" Type="Self.RecipeComments" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Cook">
+            <Principal Role="Cooks">
               <PropertyRef Name="CookId" />
             </Principal>
-            <Dependent Role="RecipeComment">
+            <Dependent Role="RecipeComments">
               <PropertyRef Name="CookId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Cook_AspNetUsers">
-          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1" />
-          <End Role="Cook" Type="Self.Cook" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="AspNetUsers">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Cook">
-              <PropertyRef Name="ApsUserId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_CookComment_Cook">
-          <End Role="Cook" Type="Self.Cook" Multiplicity="1">
+          <End Role="Cooks" Type="Self.Cooks" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
-          <End Role="CookComment" Type="Self.CookComment" Multiplicity="*" />
+          <End Role="CookComments" Type="Self.CookComments" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Cook">
+            <Principal Role="Cooks">
               <PropertyRef Name="CookId" />
             </Principal>
-            <Dependent Role="CookComment">
+            <Dependent Role="CookComments">
               <PropertyRef Name="CommentedCookId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_CookComment_Cook1">
-          <End Role="Cook" Type="Self.Cook" Multiplicity="1" />
-          <End Role="CookComment" Type="Self.CookComment" Multiplicity="*" />
+          <End Role="Cooks" Type="Self.Cooks" Multiplicity="1" />
+          <End Role="CookComments" Type="Self.CookComments" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Cook">
+            <Principal Role="Cooks">
               <PropertyRef Name="CookId" />
             </Principal>
-            <Dependent Role="CookComment">
+            <Dependent Role="CookComments">
               <PropertyRef Name="CommentOwnerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Cooks_AspNetUsers">
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1" />
+          <End Role="Cooks" Type="Self.Cooks" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Cooks">
+              <PropertyRef Name="ApsUserId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -265,165 +263,160 @@ warning 6002: The table/view 'Foodbook.dbo.FavouriteRecept' does not have a prim
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_FavouriteRecept_Cook">
-          <End Role="Cook" Type="Self.Cook" Multiplicity="1" />
+          <End Role="Cooks" Type="Self.Cooks" Multiplicity="1" />
           <End Role="FavouriteRecept" Type="Self.FavouriteRecept" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Cook">
+            <Principal Role="Cooks">
               <PropertyRef Name="CookId" />
             </Principal>
             <Dependent Role="FavouriteRecept">
-              <PropertyRef Name="CookId" />
+              <PropertyRef Name="Cooks_CookId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_FavouriteRecept_Recipe">
-          <End Role="Recipe" Type="Self.Recipe" Multiplicity="1" />
+          <End Role="Recipes" Type="Self.Recipes" Multiplicity="1" />
           <End Role="FavouriteRecept" Type="Self.FavouriteRecept" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Recipe">
+            <Principal Role="Recipes">
               <PropertyRef Name="RecipeId" />
             </Principal>
             <Dependent Role="FavouriteRecept">
-              <PropertyRef Name="RecipeId" />
+              <PropertyRef Name="Recipes1_RecipeId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_FollowedCook_Cook">
-          <End Role="Cook" Type="Self.Cook" Multiplicity="1" />
+          <End Role="Cooks" Type="Self.Cooks" Multiplicity="1" />
           <End Role="FollowedCook" Type="Self.FollowedCook" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Cook">
+            <Principal Role="Cooks">
               <PropertyRef Name="CookId" />
             </Principal>
             <Dependent Role="FollowedCook">
-              <PropertyRef Name="FollowedCookId" />
+              <PropertyRef Name="Cooks_CookId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_FollowedCook_Cook1">
-          <End Role="Cook" Type="Self.Cook" Multiplicity="1" />
+          <End Role="Cooks" Type="Self.Cooks" Multiplicity="1" />
           <End Role="FollowedCook" Type="Self.FollowedCook" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Cook">
+            <Principal Role="Cooks">
               <PropertyRef Name="CookId" />
             </Principal>
             <Dependent Role="FollowedCook">
-              <PropertyRef Name="FollowerCookId" />
+              <PropertyRef Name="Cook1_CookId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Recipe_Caloricity">
-          <End Role="Caloricity" Type="Self.Caloricity" Multiplicity="0..1" />
-          <End Role="Recipe" Type="Self.Recipe" Multiplicity="*" />
+          <End Role="Caloricities" Type="Self.Caloricities" Multiplicity="0..1" />
+          <End Role="Recipes" Type="Self.Recipes" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Caloricity">
+            <Principal Role="Caloricities">
               <PropertyRef Name="CaloricityId" />
             </Principal>
-            <Dependent Role="Recipe">
+            <Dependent Role="Recipes">
               <PropertyRef Name="CaloricityId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Recipe_Cook">
-          <End Role="Cook" Type="Self.Cook" Multiplicity="1" />
-          <End Role="Recipe" Type="Self.Recipe" Multiplicity="*" />
+          <End Role="Cooks" Type="Self.Cooks" Multiplicity="1" />
+          <End Role="Recipes" Type="Self.Recipes" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Cook">
+            <Principal Role="Cooks">
               <PropertyRef Name="CookId" />
             </Principal>
-            <Dependent Role="Recipe">
+            <Dependent Role="Recipes">
               <PropertyRef Name="CookId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_RecipeComment_Recipe">
-          <End Role="Recipe" Type="Self.Recipe" Multiplicity="1">
+          <End Role="Recipes" Type="Self.Recipes" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
-          <End Role="RecipeComment" Type="Self.RecipeComment" Multiplicity="*" />
+          <End Role="RecipeComments" Type="Self.RecipeComments" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Recipe">
+            <Principal Role="Recipes">
               <PropertyRef Name="RecipeId" />
             </Principal>
-            <Dependent Role="RecipeComment">
+            <Dependent Role="RecipeComments">
               <PropertyRef Name="RecipeId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_RecipeImage_Recipe">
-          <End Role="Recipe" Type="Self.Recipe" Multiplicity="1">
+          <End Role="Recipes" Type="Self.Recipes" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
-          <End Role="RecipeImage" Type="Self.RecipeImage" Multiplicity="*" />
+          <End Role="RecipeImages" Type="Self.RecipeImages" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Recipe">
+            <Principal Role="Recipes">
               <PropertyRef Name="RecipeId" />
             </Principal>
-            <Dependent Role="RecipeImage">
+            <Dependent Role="RecipeImages">
               <PropertyRef Name="RecipeId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Table_1_Cuisine">
-          <End Role="Cuisine" Type="Self.Cuisine" Multiplicity="1" />
-          <End Role="Recipe" Type="Self.Recipe" Multiplicity="*" />
+          <End Role="Cuisines" Type="Self.Cuisines" Multiplicity="1" />
+          <End Role="Recipes" Type="Self.Recipes" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Cuisine">
+            <Principal Role="Cuisines">
               <PropertyRef Name="CuisineId" />
             </Principal>
-            <Dependent Role="Recipe">
+            <Dependent Role="Recipes">
               <PropertyRef Name="CuisineId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Table_1_FoodCategory">
-          <End Role="FoodCategory" Type="Self.FoodCategory" Multiplicity="1" />
-          <End Role="Recipe" Type="Self.Recipe" Multiplicity="*" />
+          <End Role="FoodCategories" Type="Self.FoodCategories" Multiplicity="1" />
+          <End Role="Recipes" Type="Self.Recipes" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="FoodCategory">
+            <Principal Role="FoodCategories">
               <PropertyRef Name="CategoryId" />
             </Principal>
-            <Dependent Role="Recipe">
+            <Dependent Role="Recipes">
               <PropertyRef Name="FoodCategoryId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityContainer Name="FoodbookModelStoreContainer">
+        <EntityContainer Name="FoodBookModelStoreContainer">
           <EntitySet Name="AspNetRoles" EntityType="Self.AspNetRoles" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="AspNetUserClaims" EntityType="Self.AspNetUserClaims" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="AspNetUserLogins" EntityType="Self.AspNetUserLogins" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="AspNetUserRoles" EntityType="Self.AspNetUserRoles" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="AspNetUsers" EntityType="Self.AspNetUsers" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="Caloricity" EntityType="Self.Caloricity" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="Cook" EntityType="Self.Cook" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="CookComment" EntityType="Self.CookComment" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="Cuisine" EntityType="Self.Cuisine" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Caloricities" EntityType="Self.Caloricities" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CookComments" EntityType="Self.CookComments" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Cooks" EntityType="Self.Cooks" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Cuisines" EntityType="Self.Cuisines" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="FavouriteRecept" EntityType="Self.FavouriteRecept" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="FollowedCook" EntityType="Self.FollowedCook" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="FoodCategory" EntityType="Self.FoodCategory" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="Recipe" EntityType="Self.Recipe" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="RecipeComment" EntityType="Self.RecipeComment" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="RecipeImage" EntityType="Self.RecipeImage" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="FavouriteRecept" EntityType="Self.FavouriteRecept" store:Type="Tables" store:Schema="dbo">
-            <DefiningQuery>SELECT 
-    [FavouriteRecept].[RecipeId] AS [RecipeId], 
-    [FavouriteRecept].[CookId] AS [CookId]
-    FROM [dbo].[FavouriteRecept] AS [FavouriteRecept]</DefiningQuery>
-          </EntitySet>
+          <EntitySet Name="FoodCategories" EntityType="Self.FoodCategories" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="RecipeComments" EntityType="Self.RecipeComments" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="RecipeImages" EntityType="Self.RecipeImages" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Recipes" EntityType="Self.Recipes" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK_Comment_Cook" Association="Self.FK_Comment_Cook">
-            <End Role="Cook" EntitySet="Cook" />
-            <End Role="RecipeComment" EntitySet="RecipeComment" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Cook_AspNetUsers" Association="Self.FK_Cook_AspNetUsers">
-            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
-            <End Role="Cook" EntitySet="Cook" />
+            <End Role="Cooks" EntitySet="Cooks" />
+            <End Role="RecipeComments" EntitySet="RecipeComments" />
           </AssociationSet>
           <AssociationSet Name="FK_CookComment_Cook" Association="Self.FK_CookComment_Cook">
-            <End Role="Cook" EntitySet="Cook" />
-            <End Role="CookComment" EntitySet="CookComment" />
+            <End Role="Cooks" EntitySet="Cooks" />
+            <End Role="CookComments" EntitySet="CookComments" />
           </AssociationSet>
           <AssociationSet Name="FK_CookComment_Cook1" Association="Self.FK_CookComment_Cook1">
-            <End Role="Cook" EntitySet="Cook" />
-            <End Role="CookComment" EntitySet="CookComment" />
+            <End Role="Cooks" EntitySet="Cooks" />
+            <End Role="CookComments" EntitySet="CookComments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Cooks_AspNetUsers" Association="Self.FK_Cooks_AspNetUsers">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="Cooks" EntitySet="Cooks" />
           </AssociationSet>
           <AssociationSet Name="FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" Association="Self.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId">
             <End Role="AspNetUsers" EntitySet="AspNetUsers" />
@@ -442,122 +435,122 @@ warning 6002: The table/view 'Foodbook.dbo.FavouriteRecept' does not have a prim
             <End Role="AspNetUserRoles" EntitySet="AspNetUserRoles" />
           </AssociationSet>
           <AssociationSet Name="FK_FavouriteRecept_Cook" Association="Self.FK_FavouriteRecept_Cook">
-            <End Role="Cook" EntitySet="Cook" />
+            <End Role="Cooks" EntitySet="Cooks" />
             <End Role="FavouriteRecept" EntitySet="FavouriteRecept" />
           </AssociationSet>
           <AssociationSet Name="FK_FavouriteRecept_Recipe" Association="Self.FK_FavouriteRecept_Recipe">
-            <End Role="Recipe" EntitySet="Recipe" />
+            <End Role="Recipes" EntitySet="Recipes" />
             <End Role="FavouriteRecept" EntitySet="FavouriteRecept" />
           </AssociationSet>
           <AssociationSet Name="FK_FollowedCook_Cook" Association="Self.FK_FollowedCook_Cook">
-            <End Role="Cook" EntitySet="Cook" />
+            <End Role="Cooks" EntitySet="Cooks" />
             <End Role="FollowedCook" EntitySet="FollowedCook" />
           </AssociationSet>
           <AssociationSet Name="FK_FollowedCook_Cook1" Association="Self.FK_FollowedCook_Cook1">
-            <End Role="Cook" EntitySet="Cook" />
+            <End Role="Cooks" EntitySet="Cooks" />
             <End Role="FollowedCook" EntitySet="FollowedCook" />
           </AssociationSet>
           <AssociationSet Name="FK_Recipe_Caloricity" Association="Self.FK_Recipe_Caloricity">
-            <End Role="Caloricity" EntitySet="Caloricity" />
-            <End Role="Recipe" EntitySet="Recipe" />
+            <End Role="Caloricities" EntitySet="Caloricities" />
+            <End Role="Recipes" EntitySet="Recipes" />
           </AssociationSet>
           <AssociationSet Name="FK_Recipe_Cook" Association="Self.FK_Recipe_Cook">
-            <End Role="Cook" EntitySet="Cook" />
-            <End Role="Recipe" EntitySet="Recipe" />
+            <End Role="Cooks" EntitySet="Cooks" />
+            <End Role="Recipes" EntitySet="Recipes" />
           </AssociationSet>
           <AssociationSet Name="FK_RecipeComment_Recipe" Association="Self.FK_RecipeComment_Recipe">
-            <End Role="Recipe" EntitySet="Recipe" />
-            <End Role="RecipeComment" EntitySet="RecipeComment" />
+            <End Role="Recipes" EntitySet="Recipes" />
+            <End Role="RecipeComments" EntitySet="RecipeComments" />
           </AssociationSet>
           <AssociationSet Name="FK_RecipeImage_Recipe" Association="Self.FK_RecipeImage_Recipe">
-            <End Role="Recipe" EntitySet="Recipe" />
-            <End Role="RecipeImage" EntitySet="RecipeImage" />
+            <End Role="Recipes" EntitySet="Recipes" />
+            <End Role="RecipeImages" EntitySet="RecipeImages" />
           </AssociationSet>
           <AssociationSet Name="FK_Table_1_Cuisine" Association="Self.FK_Table_1_Cuisine">
-            <End Role="Cuisine" EntitySet="Cuisine" />
-            <End Role="Recipe" EntitySet="Recipe" />
+            <End Role="Cuisines" EntitySet="Cuisines" />
+            <End Role="Recipes" EntitySet="Recipes" />
           </AssociationSet>
           <AssociationSet Name="FK_Table_1_FoodCategory" Association="Self.FK_Table_1_FoodCategory">
-            <End Role="FoodCategory" EntitySet="FoodCategory" />
-            <End Role="Recipe" EntitySet="Recipe" />
+            <End Role="FoodCategories" EntitySet="FoodCategories" />
+            <End Role="Recipes" EntitySet="Recipes" />
           </AssociationSet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
-      <Schema Namespace="FoodbookModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
-        <EntityContainer Name="FoodbookEntities" annotation:LazyLoadingEnabled="true" >
-          <EntitySet Name="AspNetRoles" EntityType="FoodbookModel.AspNetRole" />
-          <EntitySet Name="AspNetUserClaims" EntityType="FoodbookModel.AspNetUserClaim" />
-          <EntitySet Name="AspNetUserLogins" EntityType="FoodbookModel.AspNetUserLogin" />
-          <EntitySet Name="AspNetUsers" EntityType="FoodbookModel.AspNetUser" />
-          <EntitySet Name="Caloricities" EntityType="FoodbookModel.Caloricity" />
-          <EntitySet Name="Cooks" EntityType="FoodbookModel.Cook" />
-          <EntitySet Name="CookComments" EntityType="FoodbookModel.CookComment" />
-          <EntitySet Name="Cuisines" EntityType="FoodbookModel.Cuisine" />
-          <EntitySet Name="FoodCategories" EntityType="FoodbookModel.FoodCategory" />
-          <EntitySet Name="Recipes" EntityType="FoodbookModel.Recipe" />
-          <EntitySet Name="RecipeComments" EntityType="FoodbookModel.RecipeComment" />
-          <EntitySet Name="RecipeImages" EntityType="FoodbookModel.RecipeImage" />
-          <AssociationSet Name="FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" Association="FoodbookModel.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId">
+      <Schema Namespace="FoodBookModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="FoodBookEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="AspNetRoles" EntityType="FoodBookModel.AspNetRole" />
+          <EntitySet Name="AspNetUserClaims" EntityType="FoodBookModel.AspNetUserClaim" />
+          <EntitySet Name="AspNetUserLogins" EntityType="FoodBookModel.AspNetUserLogin" />
+          <EntitySet Name="AspNetUsers" EntityType="FoodBookModel.AspNetUser" />
+          <EntitySet Name="Caloricities" EntityType="FoodBookModel.Caloricity" />
+          <EntitySet Name="CookComments" EntityType="FoodBookModel.CookComment" />
+          <EntitySet Name="Cooks" EntityType="FoodBookModel.Cook" />
+          <EntitySet Name="Cuisines" EntityType="FoodBookModel.Cuisine" />
+          <EntitySet Name="FoodCategories" EntityType="FoodBookModel.FoodCategory" />
+          <EntitySet Name="RecipeComments" EntityType="FoodBookModel.RecipeComment" />
+          <EntitySet Name="RecipeImages" EntityType="FoodBookModel.RecipeImage" />
+          <EntitySet Name="Recipes" EntityType="FoodBookModel.Recipe" />
+          <AssociationSet Name="FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" Association="FoodBookModel.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId">
             <End Role="AspNetUser" EntitySet="AspNetUsers" />
             <End Role="AspNetUserClaim" EntitySet="AspNetUserClaims" />
           </AssociationSet>
-          <AssociationSet Name="FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" Association="FoodbookModel.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId">
+          <AssociationSet Name="FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" Association="FoodBookModel.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId">
             <End Role="AspNetUser" EntitySet="AspNetUsers" />
             <End Role="AspNetUserLogin" EntitySet="AspNetUserLogins" />
           </AssociationSet>
-          <AssociationSet Name="FK_Cook_AspNetUsers" Association="FoodbookModel.FK_Cook_AspNetUsers">
+          <AssociationSet Name="FK_Cooks_AspNetUsers" Association="FoodBookModel.FK_Cooks_AspNetUsers">
             <End Role="AspNetUser" EntitySet="AspNetUsers" />
             <End Role="Cook" EntitySet="Cooks" />
           </AssociationSet>
-          <AssociationSet Name="FK_Recipe_Caloricity" Association="FoodbookModel.FK_Recipe_Caloricity">
+          <AssociationSet Name="FK_Recipe_Caloricity" Association="FoodBookModel.FK_Recipe_Caloricity">
             <End Role="Caloricity" EntitySet="Caloricities" />
             <End Role="Recipe" EntitySet="Recipes" />
           </AssociationSet>
-          <AssociationSet Name="FK_Comment_Cook" Association="FoodbookModel.FK_Comment_Cook">
+          <AssociationSet Name="FK_CookComment_Cook" Association="FoodBookModel.FK_CookComment_Cook">
+            <End Role="Cook" EntitySet="Cooks" />
+            <End Role="CookComment" EntitySet="CookComments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CookComment_Cook1" Association="FoodBookModel.FK_CookComment_Cook1">
+            <End Role="Cook" EntitySet="Cooks" />
+            <End Role="CookComment" EntitySet="CookComments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Comment_Cook" Association="FoodBookModel.FK_Comment_Cook">
             <End Role="Cook" EntitySet="Cooks" />
             <End Role="RecipeComment" EntitySet="RecipeComments" />
           </AssociationSet>
-          <AssociationSet Name="FK_CookComment_Cook" Association="FoodbookModel.FK_CookComment_Cook">
-            <End Role="Cook" EntitySet="Cooks" />
-            <End Role="CookComment" EntitySet="CookComments" />
-          </AssociationSet>
-          <AssociationSet Name="FK_CookComment_Cook1" Association="FoodbookModel.FK_CookComment_Cook1">
-            <End Role="Cook" EntitySet="Cooks" />
-            <End Role="CookComment" EntitySet="CookComments" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Recipe_Cook" Association="FoodbookModel.FK_Recipe_Cook">
+          <AssociationSet Name="FK_Recipe_Cook" Association="FoodBookModel.FK_Recipe_Cook">
             <End Role="Cook" EntitySet="Cooks" />
             <End Role="Recipe" EntitySet="Recipes" />
           </AssociationSet>
-          <AssociationSet Name="FK_Table_1_Cuisine" Association="FoodbookModel.FK_Table_1_Cuisine">
+          <AssociationSet Name="FK_Table_1_Cuisine" Association="FoodBookModel.FK_Table_1_Cuisine">
             <End Role="Cuisine" EntitySet="Cuisines" />
             <End Role="Recipe" EntitySet="Recipes" />
           </AssociationSet>
-          <AssociationSet Name="FK_Table_1_FoodCategory" Association="FoodbookModel.FK_Table_1_FoodCategory">
+          <AssociationSet Name="FK_Table_1_FoodCategory" Association="FoodBookModel.FK_Table_1_FoodCategory">
             <End Role="FoodCategory" EntitySet="FoodCategories" />
             <End Role="Recipe" EntitySet="Recipes" />
           </AssociationSet>
-          <AssociationSet Name="FK_RecipeComment_Recipe" Association="FoodbookModel.FK_RecipeComment_Recipe">
+          <AssociationSet Name="FK_RecipeComment_Recipe" Association="FoodBookModel.FK_RecipeComment_Recipe">
             <End Role="Recipe" EntitySet="Recipes" />
             <End Role="RecipeComment" EntitySet="RecipeComments" />
           </AssociationSet>
-          <AssociationSet Name="FK_RecipeImage_Recipe" Association="FoodbookModel.FK_RecipeImage_Recipe">
+          <AssociationSet Name="FK_RecipeImage_Recipe" Association="FoodBookModel.FK_RecipeImage_Recipe">
             <End Role="Recipe" EntitySet="Recipes" />
             <End Role="RecipeImage" EntitySet="RecipeImages" />
           </AssociationSet>
-          <AssociationSet Name="AspNetUserRoles" Association="FoodbookModel.AspNetUserRoles">
+          <AssociationSet Name="AspNetUserRoles" Association="FoodBookModel.AspNetUserRoles">
             <End Role="AspNetRole" EntitySet="AspNetRoles" />
             <End Role="AspNetUser" EntitySet="AspNetUsers" />
           </AssociationSet>
-          <AssociationSet Name="FollowedCook" Association="FoodbookModel.FollowedCook">
-            <End Role="Cook" EntitySet="Cooks" />
-            <End Role="Cook1" EntitySet="Cooks" />
-          </AssociationSet>
-          <AssociationSet Name="FavouriteRecept" Association="FoodbookModel.FavouriteRecept">
+          <AssociationSet Name="FavouriteRecept" Association="FoodBookModel.FavouriteRecept">
             <End Role="Cook" EntitySet="Cooks" />
             <End Role="Recipe" EntitySet="Recipes" />
+          </AssociationSet>
+          <AssociationSet Name="FollowedCook" Association="FoodBookModel.FollowedCook">
+            <End Role="Cook" EntitySet="Cooks" />
+            <End Role="Cook1" EntitySet="Cooks" />
           </AssociationSet>
         </EntityContainer>
         <EntityType Name="AspNetRole">
@@ -566,7 +559,7 @@ warning 6002: The table/view 'Foodbook.dbo.FavouriteRecept' does not have a prim
           </Key>
           <Property Name="Id" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
           <Property Name="Name" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="AspNetUsers" Relationship="FoodbookModel.AspNetUserRoles" FromRole="AspNetRole" ToRole="AspNetUser" />
+          <NavigationProperty Name="AspNetUsers" Relationship="FoodBookModel.AspNetUserRoles" FromRole="AspNetRole" ToRole="AspNetUser" />
         </EntityType>
         <EntityType Name="AspNetUserClaim">
           <Key>
@@ -576,7 +569,7 @@ warning 6002: The table/view 'Foodbook.dbo.FavouriteRecept' does not have a prim
           <Property Name="UserId" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
           <Property Name="ClaimType" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="ClaimValue" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="AspNetUser" Relationship="FoodbookModel.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" FromRole="AspNetUserClaim" ToRole="AspNetUser" />
+          <NavigationProperty Name="AspNetUser" Relationship="FoodBookModel.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" FromRole="AspNetUserClaim" ToRole="AspNetUser" />
         </EntityType>
         <EntityType Name="AspNetUserLogin">
           <Key>
@@ -587,7 +580,7 @@ warning 6002: The table/view 'Foodbook.dbo.FavouriteRecept' does not have a prim
           <Property Name="LoginProvider" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
           <Property Name="ProviderKey" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
           <Property Name="UserId" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="AspNetUser" Relationship="FoodbookModel.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" FromRole="AspNetUserLogin" ToRole="AspNetUser" />
+          <NavigationProperty Name="AspNetUser" Relationship="FoodBookModel.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" FromRole="AspNetUserLogin" ToRole="AspNetUser" />
         </EntityType>
         <EntityType Name="AspNetUser">
           <Key>
@@ -605,10 +598,10 @@ warning 6002: The table/view 'Foodbook.dbo.FavouriteRecept' does not have a prim
           <Property Name="LockoutEnabled" Type="Boolean" Nullable="false" />
           <Property Name="AccessFailedCount" Type="Int32" Nullable="false" />
           <Property Name="UserName" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="AspNetUserClaims" Relationship="FoodbookModel.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" FromRole="AspNetUser" ToRole="AspNetUserClaim" />
-          <NavigationProperty Name="AspNetUserLogins" Relationship="FoodbookModel.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" FromRole="AspNetUser" ToRole="AspNetUserLogin" />
-          <NavigationProperty Name="Cooks" Relationship="FoodbookModel.FK_Cook_AspNetUsers" FromRole="AspNetUser" ToRole="Cook" />
-          <NavigationProperty Name="AspNetRoles" Relationship="FoodbookModel.AspNetUserRoles" FromRole="AspNetUser" ToRole="AspNetRole" />
+          <NavigationProperty Name="AspNetUserClaims" Relationship="FoodBookModel.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" FromRole="AspNetUser" ToRole="AspNetUserClaim" />
+          <NavigationProperty Name="AspNetUserLogins" Relationship="FoodBookModel.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" FromRole="AspNetUser" ToRole="AspNetUserLogin" />
+          <NavigationProperty Name="Cooks" Relationship="FoodBookModel.FK_Cooks_AspNetUsers" FromRole="AspNetUser" ToRole="Cook" />
+          <NavigationProperty Name="AspNetRoles" Relationship="FoodBookModel.AspNetUserRoles" FromRole="AspNetUser" ToRole="AspNetRole" />
         </EntityType>
         <EntityType Name="Caloricity">
           <Key>
@@ -618,7 +611,19 @@ warning 6002: The table/view 'Foodbook.dbo.FavouriteRecept' does not have a prim
           <Property Name="MinValue" Type="Int32" />
           <Property Name="MaxValue" Type="Int32" />
           <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="Recipes" Relationship="FoodbookModel.FK_Recipe_Caloricity" FromRole="Caloricity" ToRole="Recipe" />
+          <NavigationProperty Name="Recipes" Relationship="FoodBookModel.FK_Recipe_Caloricity" FromRole="Caloricity" ToRole="Recipe" />
+        </EntityType>
+        <EntityType Name="CookComment">
+          <Key>
+            <PropertyRef Name="CommentId" />
+          </Key>
+          <Property Name="CommentId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CommentedCookId" Type="Int64" Nullable="false" />
+          <Property Name="CommentOwnerId" Type="Int64" Nullable="false" />
+          <Property Name="CommentText" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="DateInserted" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Cook" Relationship="FoodBookModel.FK_CookComment_Cook" FromRole="CookComment" ToRole="Cook" />
+          <NavigationProperty Name="Cook1" Relationship="FoodBookModel.FK_CookComment_Cook1" FromRole="CookComment" ToRole="Cook" />
         </EntityType>
         <EntityType Name="Cook">
           <Key>
@@ -630,26 +635,14 @@ warning 6002: The table/view 'Foodbook.dbo.FavouriteRecept' does not have a prim
           <Property Name="LastName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Bio" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="PhotoUrl" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="AspNetUser" Relationship="FoodbookModel.FK_Cook_AspNetUsers" FromRole="Cook" ToRole="AspNetUser" />
-          <NavigationProperty Name="RecipeComments" Relationship="FoodbookModel.FK_Comment_Cook" FromRole="Cook" ToRole="RecipeComment" />
-          <NavigationProperty Name="CookComments" Relationship="FoodbookModel.FK_CookComment_Cook" FromRole="Cook" ToRole="CookComment" />
-          <NavigationProperty Name="CookComments1" Relationship="FoodbookModel.FK_CookComment_Cook1" FromRole="Cook" ToRole="CookComment" />
-          <NavigationProperty Name="Recipes" Relationship="FoodbookModel.FK_Recipe_Cook" FromRole="Cook" ToRole="Recipe" />
-          <NavigationProperty Name="Cook1" Relationship="FoodbookModel.FollowedCook" FromRole="Cook" ToRole="Cook1" />
-          <NavigationProperty Name="Cooks" Relationship="FoodbookModel.FollowedCook" FromRole="Cook1" ToRole="Cook" />
-          <NavigationProperty Name="Recipes1" Relationship="FoodbookModel.FavouriteRecept" FromRole="Cook" ToRole="Recipe" />
-        </EntityType>
-        <EntityType Name="CookComment">
-          <Key>
-            <PropertyRef Name="CommentId" />
-          </Key>
-          <Property Name="CommentId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="CommentedCookId" Type="Int64" Nullable="false" />
-          <Property Name="CommentOwnerId" Type="Int64" Nullable="false" />
-          <Property Name="CommentText" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="DateInserted" Type="DateTime" Nullable="false" Precision="3" />
-          <NavigationProperty Name="Cook" Relationship="FoodbookModel.FK_CookComment_Cook" FromRole="CookComment" ToRole="Cook" />
-          <NavigationProperty Name="Cook1" Relationship="FoodbookModel.FK_CookComment_Cook1" FromRole="CookComment" ToRole="Cook" />
+          <NavigationProperty Name="AspNetUser" Relationship="FoodBookModel.FK_Cooks_AspNetUsers" FromRole="Cook" ToRole="AspNetUser" />
+          <NavigationProperty Name="CookComments" Relationship="FoodBookModel.FK_CookComment_Cook" FromRole="Cook" ToRole="CookComment" />
+          <NavigationProperty Name="CookComments1" Relationship="FoodBookModel.FK_CookComment_Cook1" FromRole="Cook" ToRole="CookComment" />
+          <NavigationProperty Name="RecipeComments" Relationship="FoodBookModel.FK_Comment_Cook" FromRole="Cook" ToRole="RecipeComment" />
+          <NavigationProperty Name="Recipes" Relationship="FoodBookModel.FK_Recipe_Cook" FromRole="Cook" ToRole="Recipe" />
+          <NavigationProperty Name="Recipes1" Relationship="FoodBookModel.FavouriteRecept" FromRole="Cook" ToRole="Recipe" />
+          <NavigationProperty Name="Cooks1" Relationship="FoodBookModel.FollowedCook" FromRole="Cook" ToRole="Cook1" />
+          <NavigationProperty Name="Cooks" Relationship="FoodBookModel.FollowedCook" FromRole="Cook1" ToRole="Cook" />
         </EntityType>
         <EntityType Name="Cuisine">
           <Key>
@@ -658,7 +651,7 @@ warning 6002: The table/view 'Foodbook.dbo.FavouriteRecept' does not have a prim
           <Property Name="CuisineId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="CuisineName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="IsActive" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="Recipes" Relationship="FoodbookModel.FK_Table_1_Cuisine" FromRole="Cuisine" ToRole="Recipe" />
+          <NavigationProperty Name="Recipes" Relationship="FoodBookModel.FK_Table_1_Cuisine" FromRole="Cuisine" ToRole="Recipe" />
         </EntityType>
         <EntityType Name="FoodCategory">
           <Key>
@@ -667,7 +660,30 @@ warning 6002: The table/view 'Foodbook.dbo.FavouriteRecept' does not have a prim
           <Property Name="CategoryId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="CategoryName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="IsActive" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="Recipes" Relationship="FoodbookModel.FK_Table_1_FoodCategory" FromRole="FoodCategory" ToRole="Recipe" />
+          <NavigationProperty Name="Recipes" Relationship="FoodBookModel.FK_Table_1_FoodCategory" FromRole="FoodCategory" ToRole="Recipe" />
+        </EntityType>
+        <EntityType Name="RecipeComment">
+          <Key>
+            <PropertyRef Name="CommentId" />
+          </Key>
+          <Property Name="CommentId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="RecipeId" Type="Int64" Nullable="false" />
+          <Property Name="Rating" Type="Int32" Nullable="false" />
+          <Property Name="CommentText" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="CookId" Type="Int64" Nullable="false" />
+          <Property Name="DateInserted" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Cook" Relationship="FoodBookModel.FK_Comment_Cook" FromRole="RecipeComment" ToRole="Cook" />
+          <NavigationProperty Name="Recipe" Relationship="FoodBookModel.FK_RecipeComment_Recipe" FromRole="RecipeComment" ToRole="Recipe" />
+        </EntityType>
+        <EntityType Name="RecipeImage">
+          <Key>
+            <PropertyRef Name="ImageId" />
+          </Key>
+          <Property Name="ImageId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="RecipeId" Type="Int64" Nullable="false" />
+          <Property Name="PhotoUrl" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Name="InsertDate" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Recipe" Relationship="FoodBookModel.FK_RecipeImage_Recipe" FromRole="RecipeImage" ToRole="Recipe" />
         </EntityType>
         <EntityType Name="Recipe">
           <Key>
@@ -684,42 +700,19 @@ warning 6002: The table/view 'Foodbook.dbo.FavouriteRecept' does not have a prim
           <Property Name="InsertDate" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="IsEnabled" Type="Boolean" Nullable="false" />
           <Property Name="PreparationTime" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Caloricity" Relationship="FoodbookModel.FK_Recipe_Caloricity" FromRole="Recipe" ToRole="Caloricity" />
-          <NavigationProperty Name="Cook" Relationship="FoodbookModel.FK_Recipe_Cook" FromRole="Recipe" ToRole="Cook" />
-          <NavigationProperty Name="Cuisine" Relationship="FoodbookModel.FK_Table_1_Cuisine" FromRole="Recipe" ToRole="Cuisine" />
-          <NavigationProperty Name="FoodCategory" Relationship="FoodbookModel.FK_Table_1_FoodCategory" FromRole="Recipe" ToRole="FoodCategory" />
-          <NavigationProperty Name="RecipeComments" Relationship="FoodbookModel.FK_RecipeComment_Recipe" FromRole="Recipe" ToRole="RecipeComment" />
-          <NavigationProperty Name="RecipeImages" Relationship="FoodbookModel.FK_RecipeImage_Recipe" FromRole="Recipe" ToRole="RecipeImage" />
-          <NavigationProperty Name="Cooks" Relationship="FoodbookModel.FavouriteRecept" FromRole="Recipe" ToRole="Cook" />
-        </EntityType>
-        <EntityType Name="RecipeComment">
-          <Key>
-            <PropertyRef Name="CommentId" />
-          </Key>
-          <Property Name="CommentId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="RecipeId" Type="Int64" Nullable="false" />
-          <Property Name="Rating" Type="Int32" Nullable="false" />
-          <Property Name="CommentText" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="CookId" Type="Int64" Nullable="false" />
-          <Property Name="DateInserted" Type="DateTime" Nullable="false" Precision="3" />
-          <NavigationProperty Name="Cook" Relationship="FoodbookModel.FK_Comment_Cook" FromRole="RecipeComment" ToRole="Cook" />
-          <NavigationProperty Name="Recipe" Relationship="FoodbookModel.FK_RecipeComment_Recipe" FromRole="RecipeComment" ToRole="Recipe" />
-        </EntityType>
-        <EntityType Name="RecipeImage">
-          <Key>
-            <PropertyRef Name="ImageId" />
-          </Key>
-          <Property Name="ImageId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="RecipeId" Type="Int64" Nullable="false" />
-          <Property Name="PhotoUrl" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
-          <Property Name="InsertDate" Type="DateTime" Nullable="false" Precision="3" />
-          <NavigationProperty Name="Recipe" Relationship="FoodbookModel.FK_RecipeImage_Recipe" FromRole="RecipeImage" ToRole="Recipe" />
+          <NavigationProperty Name="Caloricity" Relationship="FoodBookModel.FK_Recipe_Caloricity" FromRole="Recipe" ToRole="Caloricity" />
+          <NavigationProperty Name="Cook" Relationship="FoodBookModel.FK_Recipe_Cook" FromRole="Recipe" ToRole="Cook" />
+          <NavigationProperty Name="Cuisine" Relationship="FoodBookModel.FK_Table_1_Cuisine" FromRole="Recipe" ToRole="Cuisine" />
+          <NavigationProperty Name="FoodCategory" Relationship="FoodBookModel.FK_Table_1_FoodCategory" FromRole="Recipe" ToRole="FoodCategory" />
+          <NavigationProperty Name="RecipeComments" Relationship="FoodBookModel.FK_RecipeComment_Recipe" FromRole="Recipe" ToRole="RecipeComment" />
+          <NavigationProperty Name="RecipeImages" Relationship="FoodBookModel.FK_RecipeImage_Recipe" FromRole="Recipe" ToRole="RecipeImage" />
+          <NavigationProperty Name="Cooks" Relationship="FoodBookModel.FavouriteRecept" FromRole="Recipe" ToRole="Cook" />
         </EntityType>
         <Association Name="FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId">
-          <End Type="FoodbookModel.AspNetUser" Role="AspNetUser" Multiplicity="1">
+          <End Type="FoodBookModel.AspNetUser" Role="AspNetUser" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
-          <End Type="FoodbookModel.AspNetUserClaim" Role="AspNetUserClaim" Multiplicity="*" />
+          <End Type="FoodBookModel.AspNetUserClaim" Role="AspNetUserClaim" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="AspNetUser">
               <PropertyRef Name="Id" />
@@ -730,10 +723,10 @@ warning 6002: The table/view 'Foodbook.dbo.FavouriteRecept' does not have a prim
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId">
-          <End Type="FoodbookModel.AspNetUser" Role="AspNetUser" Multiplicity="1">
+          <End Type="FoodBookModel.AspNetUser" Role="AspNetUser" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
-          <End Type="FoodbookModel.AspNetUserLogin" Role="AspNetUserLogin" Multiplicity="*" />
+          <End Type="FoodBookModel.AspNetUserLogin" Role="AspNetUserLogin" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="AspNetUser">
               <PropertyRef Name="Id" />
@@ -743,9 +736,9 @@ warning 6002: The table/view 'Foodbook.dbo.FavouriteRecept' does not have a prim
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Cook_AspNetUsers">
-          <End Type="FoodbookModel.AspNetUser" Role="AspNetUser" Multiplicity="1" />
-          <End Type="FoodbookModel.Cook" Role="Cook" Multiplicity="*" />
+        <Association Name="FK_Cooks_AspNetUsers">
+          <End Type="FoodBookModel.AspNetUser" Role="AspNetUser" Multiplicity="1" />
+          <End Type="FoodBookModel.Cook" Role="Cook" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="AspNetUser">
               <PropertyRef Name="Id" />
@@ -756,8 +749,8 @@ warning 6002: The table/view 'Foodbook.dbo.FavouriteRecept' does not have a prim
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Recipe_Caloricity">
-          <End Type="FoodbookModel.Caloricity" Role="Caloricity" Multiplicity="0..1" />
-          <End Type="FoodbookModel.Recipe" Role="Recipe" Multiplicity="*" />
+          <End Type="FoodBookModel.Caloricity" Role="Caloricity" Multiplicity="0..1" />
+          <End Type="FoodBookModel.Recipe" Role="Recipe" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Caloricity">
               <PropertyRef Name="CaloricityId" />
@@ -767,25 +760,11 @@ warning 6002: The table/view 'Foodbook.dbo.FavouriteRecept' does not have a prim
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Comment_Cook">
-          <End Type="FoodbookModel.Cook" Role="Cook" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="FoodbookModel.RecipeComment" Role="RecipeComment" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Cook">
-              <PropertyRef Name="CookId" />
-            </Principal>
-            <Dependent Role="RecipeComment">
-              <PropertyRef Name="CookId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_CookComment_Cook">
-          <End Type="FoodbookModel.Cook" Role="Cook" Multiplicity="1">
+          <End Type="FoodBookModel.Cook" Role="Cook" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
-          <End Type="FoodbookModel.CookComment" Role="CookComment" Multiplicity="*" />
+          <End Type="FoodBookModel.CookComment" Role="CookComment" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Cook">
               <PropertyRef Name="CookId" />
@@ -796,8 +775,8 @@ warning 6002: The table/view 'Foodbook.dbo.FavouriteRecept' does not have a prim
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_CookComment_Cook1">
-          <End Type="FoodbookModel.Cook" Role="Cook" Multiplicity="1" />
-          <End Type="FoodbookModel.CookComment" Role="CookComment" Multiplicity="*" />
+          <End Type="FoodBookModel.Cook" Role="Cook" Multiplicity="1" />
+          <End Type="FoodBookModel.CookComment" Role="CookComment" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Cook">
               <PropertyRef Name="CookId" />
@@ -807,9 +786,23 @@ warning 6002: The table/view 'Foodbook.dbo.FavouriteRecept' does not have a prim
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Comment_Cook">
+          <End Type="FoodBookModel.Cook" Role="Cook" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="FoodBookModel.RecipeComment" Role="RecipeComment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Cook">
+              <PropertyRef Name="CookId" />
+            </Principal>
+            <Dependent Role="RecipeComment">
+              <PropertyRef Name="CookId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Recipe_Cook">
-          <End Type="FoodbookModel.Cook" Role="Cook" Multiplicity="1" />
-          <End Type="FoodbookModel.Recipe" Role="Recipe" Multiplicity="*" />
+          <End Type="FoodBookModel.Cook" Role="Cook" Multiplicity="1" />
+          <End Type="FoodBookModel.Recipe" Role="Recipe" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Cook">
               <PropertyRef Name="CookId" />
@@ -820,8 +813,8 @@ warning 6002: The table/view 'Foodbook.dbo.FavouriteRecept' does not have a prim
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Table_1_Cuisine">
-          <End Type="FoodbookModel.Cuisine" Role="Cuisine" Multiplicity="1" />
-          <End Type="FoodbookModel.Recipe" Role="Recipe" Multiplicity="*" />
+          <End Type="FoodBookModel.Cuisine" Role="Cuisine" Multiplicity="1" />
+          <End Type="FoodBookModel.Recipe" Role="Recipe" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Cuisine">
               <PropertyRef Name="CuisineId" />
@@ -832,8 +825,8 @@ warning 6002: The table/view 'Foodbook.dbo.FavouriteRecept' does not have a prim
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Table_1_FoodCategory">
-          <End Type="FoodbookModel.FoodCategory" Role="FoodCategory" Multiplicity="1" />
-          <End Type="FoodbookModel.Recipe" Role="Recipe" Multiplicity="*" />
+          <End Type="FoodBookModel.FoodCategory" Role="FoodCategory" Multiplicity="1" />
+          <End Type="FoodBookModel.Recipe" Role="Recipe" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="FoodCategory">
               <PropertyRef Name="CategoryId" />
@@ -844,10 +837,10 @@ warning 6002: The table/view 'Foodbook.dbo.FavouriteRecept' does not have a prim
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_RecipeComment_Recipe">
-          <End Type="FoodbookModel.Recipe" Role="Recipe" Multiplicity="1">
+          <End Type="FoodBookModel.Recipe" Role="Recipe" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
-          <End Type="FoodbookModel.RecipeComment" Role="RecipeComment" Multiplicity="*" />
+          <End Type="FoodBookModel.RecipeComment" Role="RecipeComment" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Recipe">
               <PropertyRef Name="RecipeId" />
@@ -858,10 +851,10 @@ warning 6002: The table/view 'Foodbook.dbo.FavouriteRecept' does not have a prim
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_RecipeImage_Recipe">
-          <End Type="FoodbookModel.Recipe" Role="Recipe" Multiplicity="1">
+          <End Type="FoodBookModel.Recipe" Role="Recipe" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
-          <End Type="FoodbookModel.RecipeImage" Role="RecipeImage" Multiplicity="*" />
+          <End Type="FoodBookModel.RecipeImage" Role="RecipeImage" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Recipe">
               <PropertyRef Name="RecipeId" />
@@ -872,25 +865,25 @@ warning 6002: The table/view 'Foodbook.dbo.FavouriteRecept' does not have a prim
           </ReferentialConstraint>
         </Association>
         <Association Name="AspNetUserRoles">
-          <End Type="FoodbookModel.AspNetRole" Role="AspNetRole" Multiplicity="*" />
-          <End Type="FoodbookModel.AspNetUser" Role="AspNetUser" Multiplicity="*" />
-        </Association>
-        <Association Name="FollowedCook">
-          <End Type="FoodbookModel.Cook" Role="Cook" Multiplicity="*" />
-          <End Type="FoodbookModel.Cook" Role="Cook1" Multiplicity="*" />
+          <End Type="FoodBookModel.AspNetRole" Role="AspNetRole" Multiplicity="*" />
+          <End Type="FoodBookModel.AspNetUser" Role="AspNetUser" Multiplicity="*" />
         </Association>
         <Association Name="FavouriteRecept">
-          <End Type="FoodbookModel.Cook" Role="Cook" Multiplicity="*" />
-          <End Type="FoodbookModel.Recipe" Role="Recipe" Multiplicity="*" />
+          <End Type="FoodBookModel.Cook" Role="Cook" Multiplicity="*" />
+          <End Type="FoodBookModel.Recipe" Role="Recipe" Multiplicity="*" />
         </Association>
-        </Schema>
+        <Association Name="FollowedCook">
+          <End Type="FoodBookModel.Cook" Role="Cook" Multiplicity="*" />
+          <End Type="FoodBookModel.Cook" Role="Cook1" Multiplicity="*" />
+        </Association>
+      </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-        <EntityContainerMapping StorageEntityContainer="FoodbookModelStoreContainer" CdmEntityContainer="FoodbookEntities" >
+        <EntityContainerMapping StorageEntityContainer="FoodBookModelStoreContainer" CdmEntityContainer="FoodBookEntities">
           <EntitySetMapping Name="AspNetRoles">
-            <EntityTypeMapping TypeName="FoodbookModel.AspNetRole">
+            <EntityTypeMapping TypeName="FoodBookModel.AspNetRole">
               <MappingFragment StoreEntitySet="AspNetRoles">
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
@@ -898,7 +891,7 @@ warning 6002: The table/view 'Foodbook.dbo.FavouriteRecept' does not have a prim
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="AspNetUserClaims">
-            <EntityTypeMapping TypeName="FoodbookModel.AspNetUserClaim">
+            <EntityTypeMapping TypeName="FoodBookModel.AspNetUserClaim">
               <MappingFragment StoreEntitySet="AspNetUserClaims">
                 <ScalarProperty Name="ClaimValue" ColumnName="ClaimValue" />
                 <ScalarProperty Name="ClaimType" ColumnName="ClaimType" />
@@ -908,7 +901,7 @@ warning 6002: The table/view 'Foodbook.dbo.FavouriteRecept' does not have a prim
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="AspNetUserLogins">
-            <EntityTypeMapping TypeName="FoodbookModel.AspNetUserLogin">
+            <EntityTypeMapping TypeName="FoodBookModel.AspNetUserLogin">
               <MappingFragment StoreEntitySet="AspNetUserLogins">
                 <ScalarProperty Name="UserId" ColumnName="UserId" />
                 <ScalarProperty Name="ProviderKey" ColumnName="ProviderKey" />
@@ -917,7 +910,7 @@ warning 6002: The table/view 'Foodbook.dbo.FavouriteRecept' does not have a prim
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="AspNetUsers">
-            <EntityTypeMapping TypeName="FoodbookModel.AspNetUser">
+            <EntityTypeMapping TypeName="FoodBookModel.AspNetUser">
               <MappingFragment StoreEntitySet="AspNetUsers">
                 <ScalarProperty Name="UserName" ColumnName="UserName" />
                 <ScalarProperty Name="AccessFailedCount" ColumnName="AccessFailedCount" />
@@ -935,8 +928,8 @@ warning 6002: The table/view 'Foodbook.dbo.FavouriteRecept' does not have a prim
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Caloricities">
-            <EntityTypeMapping TypeName="FoodbookModel.Caloricity">
-              <MappingFragment StoreEntitySet="Caloricity">
+            <EntityTypeMapping TypeName="FoodBookModel.Caloricity">
+              <MappingFragment StoreEntitySet="Caloricities">
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="MaxValue" ColumnName="MaxValue" />
                 <ScalarProperty Name="MinValue" ColumnName="MinValue" />
@@ -944,9 +937,20 @@ warning 6002: The table/view 'Foodbook.dbo.FavouriteRecept' does not have a prim
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="CookComments">
+            <EntityTypeMapping TypeName="FoodBookModel.CookComment">
+              <MappingFragment StoreEntitySet="CookComments">
+                <ScalarProperty Name="DateInserted" ColumnName="DateInserted" />
+                <ScalarProperty Name="CommentText" ColumnName="CommentText" />
+                <ScalarProperty Name="CommentOwnerId" ColumnName="CommentOwnerId" />
+                <ScalarProperty Name="CommentedCookId" ColumnName="CommentedCookId" />
+                <ScalarProperty Name="CommentId" ColumnName="CommentId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="Cooks">
-            <EntityTypeMapping TypeName="FoodbookModel.Cook">
-              <MappingFragment StoreEntitySet="Cook">
+            <EntityTypeMapping TypeName="FoodBookModel.Cook">
+              <MappingFragment StoreEntitySet="Cooks">
                 <ScalarProperty Name="PhotoUrl" ColumnName="PhotoUrl" />
                 <ScalarProperty Name="Bio" ColumnName="Bio" />
                 <ScalarProperty Name="LastName" ColumnName="LastName" />
@@ -956,20 +960,9 @@ warning 6002: The table/view 'Foodbook.dbo.FavouriteRecept' does not have a prim
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="CookComments">
-            <EntityTypeMapping TypeName="FoodbookModel.CookComment">
-              <MappingFragment StoreEntitySet="CookComment">
-                <ScalarProperty Name="DateInserted" ColumnName="DateInserted" />
-                <ScalarProperty Name="CommentText" ColumnName="CommentText" />
-                <ScalarProperty Name="CommentOwnerId" ColumnName="CommentOwnerId" />
-                <ScalarProperty Name="CommentedCookId" ColumnName="CommentedCookId" />
-                <ScalarProperty Name="CommentId" ColumnName="CommentId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="Cuisines">
-            <EntityTypeMapping TypeName="FoodbookModel.Cuisine">
-              <MappingFragment StoreEntitySet="Cuisine">
+            <EntityTypeMapping TypeName="FoodBookModel.Cuisine">
+              <MappingFragment StoreEntitySet="Cuisines">
                 <ScalarProperty Name="IsActive" ColumnName="IsActive" />
                 <ScalarProperty Name="CuisineName" ColumnName="CuisineName" />
                 <ScalarProperty Name="CuisineId" ColumnName="CuisineId" />
@@ -977,17 +970,39 @@ warning 6002: The table/view 'Foodbook.dbo.FavouriteRecept' does not have a prim
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="FoodCategories">
-            <EntityTypeMapping TypeName="FoodbookModel.FoodCategory">
-              <MappingFragment StoreEntitySet="FoodCategory">
+            <EntityTypeMapping TypeName="FoodBookModel.FoodCategory">
+              <MappingFragment StoreEntitySet="FoodCategories">
                 <ScalarProperty Name="IsActive" ColumnName="IsActive" />
                 <ScalarProperty Name="CategoryName" ColumnName="CategoryName" />
                 <ScalarProperty Name="CategoryId" ColumnName="CategoryId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="RecipeComments">
+            <EntityTypeMapping TypeName="FoodBookModel.RecipeComment">
+              <MappingFragment StoreEntitySet="RecipeComments">
+                <ScalarProperty Name="DateInserted" ColumnName="DateInserted" />
+                <ScalarProperty Name="CookId" ColumnName="CookId" />
+                <ScalarProperty Name="CommentText" ColumnName="CommentText" />
+                <ScalarProperty Name="Rating" ColumnName="Rating" />
+                <ScalarProperty Name="RecipeId" ColumnName="RecipeId" />
+                <ScalarProperty Name="CommentId" ColumnName="CommentId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RecipeImages">
+            <EntityTypeMapping TypeName="FoodBookModel.RecipeImage">
+              <MappingFragment StoreEntitySet="RecipeImages">
+                <ScalarProperty Name="InsertDate" ColumnName="InsertDate" />
+                <ScalarProperty Name="PhotoUrl" ColumnName="PhotoUrl" />
+                <ScalarProperty Name="RecipeId" ColumnName="RecipeId" />
+                <ScalarProperty Name="ImageId" ColumnName="ImageId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="Recipes">
-            <EntityTypeMapping TypeName="FoodbookModel.Recipe">
-              <MappingFragment StoreEntitySet="Recipe">
+            <EntityTypeMapping TypeName="FoodBookModel.Recipe">
+              <MappingFragment StoreEntitySet="Recipes">
                 <ScalarProperty Name="PreparationTime" ColumnName="PreparationTime" />
                 <ScalarProperty Name="IsEnabled" ColumnName="IsEnabled" />
                 <ScalarProperty Name="InsertDate" ColumnName="InsertDate" />
@@ -1002,29 +1017,7 @@ warning 6002: The table/view 'Foodbook.dbo.FavouriteRecept' does not have a prim
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="RecipeComments">
-            <EntityTypeMapping TypeName="FoodbookModel.RecipeComment">
-              <MappingFragment StoreEntitySet="RecipeComment">
-                <ScalarProperty Name="DateInserted" ColumnName="DateInserted" />
-                <ScalarProperty Name="CookId" ColumnName="CookId" />
-                <ScalarProperty Name="CommentText" ColumnName="CommentText" />
-                <ScalarProperty Name="Rating" ColumnName="Rating" />
-                <ScalarProperty Name="RecipeId" ColumnName="RecipeId" />
-                <ScalarProperty Name="CommentId" ColumnName="CommentId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="RecipeImages">
-            <EntityTypeMapping TypeName="FoodbookModel.RecipeImage">
-              <MappingFragment StoreEntitySet="RecipeImage">
-                <ScalarProperty Name="InsertDate" ColumnName="InsertDate" />
-                <ScalarProperty Name="PhotoUrl" ColumnName="PhotoUrl" />
-                <ScalarProperty Name="RecipeId" ColumnName="RecipeId" />
-                <ScalarProperty Name="ImageId" ColumnName="ImageId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <AssociationSetMapping Name="AspNetUserRoles" TypeName="FoodbookModel.AspNetUserRoles" StoreEntitySet="AspNetUserRoles">
+          <AssociationSetMapping Name="AspNetUserRoles" TypeName="FoodBookModel.AspNetUserRoles" StoreEntitySet="AspNetUserRoles">
             <EndProperty Name="AspNetUser">
               <ScalarProperty Name="Id" ColumnName="UserId" />
             </EndProperty>
@@ -1032,20 +1025,20 @@ warning 6002: The table/view 'Foodbook.dbo.FavouriteRecept' does not have a prim
               <ScalarProperty Name="Id" ColumnName="RoleId" />
             </EndProperty>
           </AssociationSetMapping>
-          <AssociationSetMapping Name="FollowedCook" TypeName="FoodbookModel.FollowedCook" StoreEntitySet="FollowedCook">
-            <EndProperty Name="Cook1">
-              <ScalarProperty Name="CookId" ColumnName="FollowerCookId" />
+          <AssociationSetMapping Name="FavouriteRecept" TypeName="FoodBookModel.FavouriteRecept" StoreEntitySet="FavouriteRecept">
+            <EndProperty Name="Recipe">
+              <ScalarProperty Name="RecipeId" ColumnName="Recipes1_RecipeId" />
             </EndProperty>
             <EndProperty Name="Cook">
-              <ScalarProperty Name="CookId" ColumnName="FollowedCookId" />
+              <ScalarProperty Name="CookId" ColumnName="Cooks_CookId" />
             </EndProperty>
           </AssociationSetMapping>
-          <AssociationSetMapping Name="FavouriteRecept" TypeName="FoodbookModel.FavouriteRecept" StoreEntitySet="FavouriteRecept">
-            <EndProperty Name="Recipe">
-              <ScalarProperty Name="RecipeId" ColumnName="RecipeId" />
+          <AssociationSetMapping Name="FollowedCook" TypeName="FoodBookModel.FollowedCook" StoreEntitySet="FollowedCook">
+            <EndProperty Name="Cook1">
+              <ScalarProperty Name="CookId" ColumnName="Cook1_CookId" />
             </EndProperty>
             <EndProperty Name="Cook">
-              <ScalarProperty Name="CookId" ColumnName="CookId" />
+              <ScalarProperty Name="CookId" ColumnName="Cooks_CookId" />
             </EndProperty>
           </AssociationSetMapping>
         </EntityContainerMapping>

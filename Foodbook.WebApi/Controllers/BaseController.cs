@@ -10,11 +10,11 @@ namespace Foodbook.WebApi.Controllers
 {
     public abstract class BaseController : ApiController
     {
-        protected FoodbookEntities DbContext;
+        protected FoodBookEntities DbContext;
 
         public BaseController()
         {
-            DbContext = new FoodbookEntities();
+            DbContext = new FoodBookEntities();
         }
 
         protected override void Dispose(bool disposing)

@@ -256,7 +256,7 @@ namespace Foodbook.WebApi
         private static string GetRootUrlFromAppConfig()
         {
             //return "http://192.168.0.104:50226/";
-            return "http://192.168.1.2:50226/";
+            return "http://srv.dunavnet.eu/FoodBookApi";
         }
     }
 }

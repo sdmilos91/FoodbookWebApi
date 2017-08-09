@@ -41,6 +41,7 @@
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data.Entity" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
     <Reference Include="System.Xml.Linq" />
@@ -52,85 +53,83 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AspNetRole.cs">
-      <DependentUpon>FoodbookModel.tt</DependentUpon>
+      <DependentUpon>FoodBookModel.tt</DependentUpon>
     </Compile>
     <Compile Include="AspNetUser.cs">
-      <DependentUpon>FoodbookModel.tt</DependentUpon>
+      <DependentUpon>FoodBookModel.tt</DependentUpon>
     </Compile>
     <Compile Include="AspNetUserClaim.cs">
-      <DependentUpon>FoodbookModel.tt</DependentUpon>
+      <DependentUpon>FoodBookModel.tt</DependentUpon>
     </Compile>
     <Compile Include="AspNetUserLogin.cs">
-      <DependentUpon>FoodbookModel.tt</DependentUpon>
+      <DependentUpon>FoodBookModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Caloricity.cs">
-      <DependentUpon>FoodbookModel.tt</DependentUpon>
+      <DependentUpon>FoodBookModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Cook.cs">
-      <DependentUpon>FoodbookModel.tt</DependentUpon>
+      <DependentUpon>FoodBookModel.tt</DependentUpon>
     </Compile>
     <Compile Include="CookComment.cs">
-      <DependentUpon>FoodbookModel.tt</DependentUpon>
+      <DependentUpon>FoodBookModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Cuisine.cs">
-      <DependentUpon>FoodbookModel.tt</DependentUpon>
+      <DependentUpon>FoodBookModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="FoodbookModel.Context.cs">
+    <Compile Include="FoodBookModel.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>FoodbookModel.Context.tt</DependentUpon>
+      <DependentUpon>FoodBookModel.Context.tt</DependentUpon>
     </Compile>
-    <Compile Include="FoodbookModel.cs">
+    <Compile Include="FoodBookModel.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>FoodbookModel.tt</DependentUpon>
+      <DependentUpon>FoodBookModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="FoodbookModel.Designer.cs">
+    <Compile Include="FoodBookModel.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>FoodbookModel.edmx</DependentUpon>
+      <DependentUpon>FoodBookModel.edmx</DependentUpon>
     </Compile>
     <Compile Include="FoodCategory.cs">
-      <DependentUpon>FoodbookModel.tt</DependentUpon>
+      <DependentUpon>FoodBookModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Recipe.cs">
-      <DependentUpon>FoodbookModel.tt</DependentUpon>
+      <DependentUpon>FoodBookModel.tt</DependentUpon>
     </Compile>
     <Compile Include="RecipeComment.cs">
-      <DependentUpon>FoodbookModel.tt</DependentUpon>
+      <DependentUpon>FoodBookModel.tt</DependentUpon>
     </Compile>
     <Compile Include="RecipeImage.cs">
-      <DependentUpon>FoodbookModel.tt</DependentUpon>
+      <DependentUpon>FoodBookModel.tt</DependentUpon>
     </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <EntityDeploy Include="FoodbookModel.edmx">
-      <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>FoodbookModel.Designer.cs</LastGenOutput>
-    </EntityDeploy>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.Config" />
-    <None Include="FoodbookModel.edmx.diagram">
-      <DependentUpon>FoodbookModel.edmx</DependentUpon>
+    <EntityDeploy Include="FoodBookModel.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>FoodBookModel.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <None Include="FoodBookModel.edmx.diagram">
+      <DependentUpon>FoodBookModel.edmx</DependentUpon>
     </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="FoodbookModel.Context.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>FoodbookModel.edmx</DependentUpon>
-      <LastGenOutput>FoodbookModel.Context.cs</LastGenOutput>
-    </Content>
-    <Content Include="FoodbookModel.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>FoodbookModel.edmx</DependentUpon>
-      <LastGenOutput>FoodbookModel.cs</LastGenOutput>
-    </Content>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+    <Content Include="FoodBookModel.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>FoodBookModel.edmx</DependentUpon>
+      <LastGenOutput>FoodBookModel.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="FoodBookModel.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>FoodBookModel.edmx</DependentUpon>
+      <LastGenOutput>FoodBookModel.cs</LastGenOutput>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
