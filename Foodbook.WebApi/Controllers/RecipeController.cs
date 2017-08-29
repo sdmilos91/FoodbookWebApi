@@ -37,18 +37,44 @@ namespace Foodbook.WebApi.Controllers
             }
         }
 
-        public IHttpActionResult Get(string text = "", long? categoryId = null, long? cuisineId = null)
+        public IHttpActionResult Get([FromUri]RequestRecipeModel requestModel)
         {
+            ResponseRecipeModel responseModel = new ResponseRecipeModel();
             try
             {
-                List<Recipe> recipes = DbContext.Recipes.Where(x => (string.IsNullOrEmpty(text) ? true : x.Name.ToLower().Contains(text.ToLower()))
-                                                                 && (categoryId.HasValue ? x.FoodCategoryId == categoryId.Value : true)
-                                                                 && (cuisineId.HasValue ? x.CuisineId == cuisineId.Value : true)
-                                                                ).ToList();
+                if (requestModel != null)
+                {
+                    if (User.Identity.IsAuthenticated && !requestModel.JustsAllRecipes)
+                    {
+                        string aspUserId = User.Identity.GetUserId();
 
-                List<RecipeModel> models = recipes.Select(x => InitRecipeModel(x)).ToList();
+                        List<Recipe> myRecipes = DbContext.Recipes.Where(x => x.Cook.ApsUserId.Equals(aspUserId) && (string.IsNullOrEmpty(requestModel.Text) ? true : x.Name.ToLower().Contains(requestModel.Text.ToLower()))
+                                                                     && (requestModel.CategoryId.HasValue ? x.FoodCategoryId == requestModel.CategoryId.Value : true)
+                                                                     && (requestModel.CuisineId.HasValue ? x.CuisineId == requestModel.CuisineId.Value : true)
+                                                                    ).OrderByDescending(x => x.RecipeComments.Average(z => z.Rating)).ToList();
 
-                return Ok(models);
+                        List<Recipe> favRecipes = DbContext.Recipes.Where(x => x.Cooks.Any(z => z.ApsUserId.Equals(aspUserId)) && (string.IsNullOrEmpty(requestModel.Text) ? true : x.Name.ToLower().Contains(requestModel.Text.ToLower()))
+                                                                     && (requestModel.CategoryId.HasValue ? x.FoodCategoryId == requestModel.CategoryId.Value : true)
+                                                                     && (requestModel.CuisineId.HasValue ? x.CuisineId == requestModel.CuisineId.Value : true)
+                                                                    ).OrderByDescending(x => x.RecipeComments.Average(z => z.Rating)).ToList();
+
+                        responseModel.MyRecipes = myRecipes.Select(x => InitRecipeModel(x)).ToList();
+                        responseModel.FavouriteRecipes = favRecipes.Select(x => InitRecipeModel(x)).ToList();
+                    }
+
+                    List<Recipe> recipes = DbContext.Recipes.Where(x => (string.IsNullOrEmpty(requestModel.Text) ? true : x.Name.ToLower().Contains(requestModel.Text.ToLower()))
+                                                                     && (requestModel.CategoryId.HasValue ? x.FoodCategoryId == requestModel.CategoryId.Value : true)
+                                                                     && (requestModel.CuisineId.HasValue ? x.CuisineId == requestModel.CuisineId.Value : true)
+                                                                    ).OrderByDescending(x => x.RecipeComments.Average(z => z.Rating)).Skip(requestModel.StartIndex).ToList();
+
+                    responseModel.AllRecipes = recipes.Select(x => InitRecipeModel(x)).ToList();
+
+                    return Ok(responseModel);
+                }
+                else
+                {
+                    return BadRequest();
+                }
             }
             catch (Exception ex)
             {
@@ -80,8 +106,10 @@ namespace Foodbook.WebApi.Controllers
                         PreparationTime = model.PreparationTime
                     };
 
+                    recipe.RecipeImages.Clear();
+
                     foreach (var item in model.Photos)
-                    {
+                    {                        
                         recipe.RecipeImages.Add(new RecipeImage
                         {
                             InsertDate = DateTime.Now,
@@ -106,8 +134,86 @@ namespace Foodbook.WebApi.Controllers
             }
         }
 
+        [Authorize]
+        public IHttpActionResult Put(long id, [FromBody] PostRecipeModel model)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    string aspUserId = User.Identity.GetUserId();
+
+                    Cook cook = DbContext.Cooks.FirstOrDefault(x => x.ApsUserId.Equals(aspUserId));
+                    Recipe recipe = DbContext.Recipes.Find(id);
+
+                    if (recipe != null)
+                    {
+                        recipe.Name = model.Name;
+                        recipe.RecipeText = model.RecipeText;
+                        recipe.FoodCategoryId = model.CategoryId;
+                        recipe.CuisineId = model.CuisineId;
+                        recipe.CaloricityId = model.CaloricityId;
+                        recipe.IsEnabled = true;
+                        recipe.PreparationTime = model.PreparationTime;
+
+
+                        foreach (var item in model.Photos)
+                        {
+                            recipe.RecipeImages.Add(new RecipeImage
+                            {
+                                InsertDate = DateTime.Now,
+                                PhotoUrl = item.Url
+                            });
+                        }
+
+                        DbContext.SaveChanges();
+
+                        return Ok();
+                    }else
+                    {
+                        return BadRequest();
+                    }
+                }
+                else
+                {
+                    return BadRequest();
+                }
+            }
+            catch (Exception ex)
+            {
+
+                return InternalServerError(ex);
+            }
+        }
+
+        [Authorize]
+        public IHttpActionResult Delete(long id)
+        {
+            try
+            {
+                Recipe recipe = DbContext.Recipes.Find(id);
+                if (recipe != null)
+                {
+                    DbContext.Recipes.Remove(recipe);
+                    DbContext.SaveChanges();
+                    return Ok();
+                }
+                else
+                {
+                    return BadRequest();
+                }
+            }
+            catch (Exception)
+            {
+
+                return InternalServerError();
+            }
+        }
+
         private RecipeModel InitRecipeModel(Recipe x)
         {
+            string aspUserId = User.Identity.GetUserId();
+
             return new RecipeModel
             {
                 RecipeId = x.RecipeId,
@@ -125,6 +231,10 @@ namespace Foodbook.WebApi.Controllers
                 Rating = x.RecipeComments.Any() ? (double?)x.RecipeComments.Sum(z => z.Rating) / x.RecipeComments.Count() : null,
                 RecipeText = x.RecipeText,
                 PreparationTime = x.PreparationTime,
+                ProfilePhotoUrl = x.RecipeImages.Any() ? x.RecipeImages.FirstOrDefault().PhotoUrl : "http://kuhinjarecepti.com/wp-content/uploads/2012/01/%C5%A0opska-salata.jpeg",
+                IsMine = x.Cook.ApsUserId.Equals(aspUserId),
+                IsFavourite = x.Cooks.Any(z => z.ApsUserId.Equals(aspUserId)),
+
                 Comments = x.RecipeComments.ToList().Select(z => new RecipeCommentModel
                 {
                     CommentId = z.CommentId,

@@ -23,8 +23,10 @@ namespace Foodbook.WebApi.Models
         public List<RecipeCommentModel> Comments { get; set; }
         public double? Rating { get; set; }
         public int PreparationTime { get; set; }
-
+        public string ProfilePhotoUrl { get; set; }
         public List<PhotoModel> Photos { get; set; }
+        public bool IsMine { get; set; }
+        public bool IsFavourite { get; set; }
     }
 
     public class RecipeCommentModel
@@ -36,6 +38,30 @@ namespace Foodbook.WebApi.Models
         public string CookName { get; set; }
         public DateTime InsertDate { get; set; }
 
+    }
+
+    public class RequestRecipeModel
+    {        
+
+        public int StartIndex { get; set; }
+        public string Text { get; set; }
+        public long? CategoryId { get; set; }
+        public long? CuisineId { get; set; }
+        public bool JustsAllRecipes { get; set; }
+    }
+
+    public class ResponseRecipeModel
+    {
+        public ResponseRecipeModel()
+        {
+            MyRecipes = new List<RecipeModel>();
+            FavouriteRecipes = new List<RecipeModel>();
+            AllRecipes = new List<RecipeModel>();
+        }
+
+        public List<RecipeModel> MyRecipes { get; set; }
+        public List<RecipeModel> FavouriteRecipes { get; set; }
+        public List<RecipeModel> AllRecipes { get; set; }
     }
 
     public class PostRecipeModel

@@ -67,6 +67,21 @@ namespace Foodbook.WebApi.Controllers
             };
         }
 
+        // GET api/Account/IsAuthenticated
+        [HostAuthentication(DefaultAuthenticationTypes.ExternalBearer)]
+        [Route("IsAuthenticated")]
+        [HttpGet]
+        public IHttpActionResult IsAuthenticated()
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                return Ok();
+            }
+
+            return Unauthorized();
+
+        }
+
         // POST api/Account/Logout
         [Route("Logout")]
         public IHttpActionResult Logout()

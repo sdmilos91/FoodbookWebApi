@@ -19,6 +19,7 @@ namespace Foodbook.DataAccess
         public long CommentOwnerId { get; set; }
         public string CommentText { get; set; }
         public System.DateTime DateInserted { get; set; }
+        public int Rating { get; set; }
     
         public virtual Cook Cook { get; set; }
         public virtual Cook Cook1 { get; set; }

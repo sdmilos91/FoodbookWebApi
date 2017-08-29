@@ -1,5 +1,6 @@
 ﻿using Foodbook.DataAccess;
 using Foodbook.WebApi.Models;
+using Microsoft.AspNet.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -52,6 +53,56 @@ namespace Foodbook.WebApi.Controllers
             }
         }
 
+        public IHttpActionResult Get()
+        {
+            try
+            {
+                string aspUserId = User.Identity.GetUserId();
+
+                List<ResponseCookModel> model = DbContext.Cooks.Where(x => x.ApsUserId != aspUserId).ToList().Select(cook => new ResponseCookModel
+                {
+                    CookId = cook.CookId,
+                    Biography = cook.Bio,
+                    FirstName = cook.FirstName,
+                    LastName = cook.LastName,
+                    PhotoUrl = string.IsNullOrEmpty(cook.PhotoUrl) ? "chefIcon" : cook.PhotoUrl,
+                    Recipes = cook.Recipes.ToList().Select(x => InitRecipeModel(x)).ToList(),
+                    FavouriteRecipes = cook.Recipes1.ToList().Select(x => InitRecipeModel(x)).ToList(),
+                    IsFollowed = !cook.ApsUserId.Equals(aspUserId) && cook.Cook1.Any(x => x.ApsUserId.Equals(aspUserId)),
+                    FullName = cook.FirstName + " " + cook.LastName,
+                    FollowedCooks = cook.Cooks.Select(x => new CookModel
+                    {
+                        CookId = x.CookId,
+                        Biography = x.Bio,
+                        FirstName = x.FirstName,
+                        LastName = x.LastName,
+                        PhotoUrl = x.PhotoUrl
+                    }).ToList(),
+                    Comments = cook.CookComments.ToList().Select(z => new CookCommentModel
+                    {
+                        CommentId = z.CommentId,
+                        CookId = z.CommentOwnerId,
+                        CookName = string.Join(" ", z.Cook1.FirstName, z.Cook1.LastName),
+                        CommentText = z.CommentText,
+                        InsertDate = z.DateInserted,
+                        Rating = z.Rating
+
+                    }).ToList(),
+                    NumberOfRecipes = cook.Recipes.Count,
+                    NumberOfFollowers = cook.Cook1.Count,
+                    Rating = cook.CookComments.Any() ? (double?)cook.CookComments.Sum(z => z.Rating) / cook.CookComments.Count() : null,
+                }).ToList();
+
+                return Ok(model);
+                
+
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
         public IHttpActionResult Put(long id, [FromBody] CookModel model)
         {
             try
@@ -83,6 +134,8 @@ namespace Foodbook.WebApi.Controllers
 
         private RecipeModel InitRecipeModel(Recipe x)
         {
+            string aspUserId = User.Identity.GetUserId();
+
             return new RecipeModel
             {
                 RecipeId = x.RecipeId,
@@ -100,6 +153,10 @@ namespace Foodbook.WebApi.Controllers
                 Rating = x.RecipeComments.Any() ? (double?)x.RecipeComments.Sum(z => z.Rating) / x.RecipeComments.Count() : null,
                 RecipeText = x.RecipeText,
                 PreparationTime = x.PreparationTime,
+                ProfilePhotoUrl = x.RecipeImages.Any() ? x.RecipeImages.FirstOrDefault().PhotoUrl : "http://kuhinjarecepti.com/wp-content/uploads/2012/01/%C5%A0opska-salata.jpeg",
+                IsMine = x.Cook.ApsUserId.Equals(aspUserId),
+                IsFavourite = x.Cooks.Any(z => z.ApsUserId.Equals(aspUserId)),
+
                 Comments = x.RecipeComments.ToList().Select(z => new RecipeCommentModel
                 {
                     CommentId = z.CommentId,
@@ -109,6 +166,10 @@ namespace Foodbook.WebApi.Controllers
                     InsertDate = z.DateInserted,
                     Rating = z.Rating
 
+                }).ToList(),
+                Photos = x.RecipeImages.Select(z => new PhotoModel
+                {
+                    Url = z.PhotoUrl
                 }).ToList()
             };
         }

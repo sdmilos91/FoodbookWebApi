@@ -247,8 +247,11 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\CookController.cs" />
+    <Compile Include="Controllers\FavouriteCookController.cs" />
+    <Compile Include="Controllers\FavouriteRecipeController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LogController.cs" />
+    <Compile Include="Controllers\CookCommentController.cs" />
     <Compile Include="Controllers\RecipeCommentController.cs" />
     <Compile Include="Controllers\RecipeCommonDataController.cs" />
     <Compile Include="Controllers\RecipeController.cs" />
@@ -261,6 +264,7 @@
     <Compile Include="Models\CookModel.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\CommentModel.cs" />
+    <Compile Include="Models\PostCookCommentModel.cs" />
     <Compile Include="Models\RecipeCommonDataModel.cs" />
     <Compile Include="Models\RecipeModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -314,7 +318,9 @@
     <EmbeddedResource Include="SwaggerExtensions\index.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
@@ -365,7 +371,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>50226</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:50226/</IISUrl>
+          <IISUrl>http://192.168.0.107:50226/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

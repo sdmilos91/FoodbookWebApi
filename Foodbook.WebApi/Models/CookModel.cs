@@ -27,6 +27,24 @@ namespace Foodbook.WebApi.Models
         public List<CookModel> FollowedCooks { get; set; }
         public List<RecipeModel> Recipes { get; set; }
         public List<RecipeModel> FavouriteRecipes { get; set; }
+        public string FullName { get; set; }
+        public int NumberOfRecipes { get; set; }
+        public int NumberOfFollowers { get; set; }
+        public bool IsFollowed { get; set; }
+        public List<CookCommentModel> Comments { get; set; }
+        public double? Rating { get; set; }
+
+
+    }
+
+    public class CookCommentModel
+    {
+        public long CommentId { get; set; }
+        public int Rating { get; set; }
+        public string CommentText { get; set; }
+        public long CookId { get; set; }
+        public string CookName { get; set; }
+        public DateTime InsertDate { get; set; }
 
     }
 }
