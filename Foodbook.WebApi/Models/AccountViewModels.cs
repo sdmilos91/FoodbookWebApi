@@ -32,6 +32,10 @@ namespace Foodbook.WebApi.Models
         public bool HasRegistered { get; set; }
 
         public string LoginProvider { get; set; }
+
+        public long CookId { get; set; }
+
+        public string CookFullName { get; set; }
     }
 
     public class UserLoginInfoViewModel

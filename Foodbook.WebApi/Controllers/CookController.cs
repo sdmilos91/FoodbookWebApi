@@ -12,11 +12,18 @@ namespace Foodbook.WebApi.Controllers
 {
     public class CookController : BaseController
     {
+
         public IHttpActionResult Get(long id)
         {
             try
             {
+                string aspUserId = User.Identity.GetUserId();
                 Cook cook = DbContext.Cooks.Find(id);
+
+                if(cook == null)
+                {
+                    cook = DbContext.Cooks.FirstOrDefault(x => x.ApsUserId.Equals(aspUserId));
+                }
 
                 if (cook == null)
                 {
@@ -33,6 +40,7 @@ namespace Foodbook.WebApi.Controllers
                         PhotoUrl = cook.PhotoUrl,
                         Recipes = cook.Recipes.ToList().Select(x => InitRecipeModel(x)).ToList(),
                         FavouriteRecipes = cook.Recipes1.ToList().Select(x => InitRecipeModel(x)).ToList(),
+                        FullName = cook.FirstName + " " + cook.LastName,
                         FollowedCooks = cook.Cooks.Select(x => new CookModel
                         {
                             CookId = x.CookId,
@@ -40,7 +48,20 @@ namespace Foodbook.WebApi.Controllers
                             FirstName = x.FirstName,
                             LastName = x.LastName,
                             PhotoUrl = x.PhotoUrl
-                        }).ToList()                           
+                        }).ToList(),
+                        Comments = cook.CookComments.ToList().Select(z => new CookCommentModel
+                        {
+                            CommentId = z.CommentId,
+                            CookId = z.CommentOwnerId,
+                            CookName = string.Join(" ", z.Cook1.FirstName, z.Cook1.LastName),
+                            CommentText = z.CommentText,
+                            InsertDate = z.DateInserted,
+                            Rating = z.Rating
+
+                        }).ToList(),
+                        NumberOfRecipes = cook.Recipes.Count,
+                        NumberOfFollowers = cook.Cook1.Count,
+                        Rating = cook.CookComments.Any() ? (double?)cook.CookComments.Sum(z => z.Rating) / cook.CookComments.Count() : null,
                     };
 
                     return Ok(model);
