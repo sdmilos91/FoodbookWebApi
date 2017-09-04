@@ -60,7 +60,7 @@ namespace Foodbook.WebApi.Controllers
 
                         }).ToList(),
                         NumberOfRecipes = cook.Recipes.Count,
-                        NumberOfFollowers = cook.Cook1.Count,
+                        NumberOfFollowers = cook.Cooks1.Count,
                         Rating = cook.CookComments.Any() ? (double?)cook.CookComments.Sum(z => z.Rating) / cook.CookComments.Count() : null,
                     };
 

@@ -156,6 +156,13 @@ namespace Foodbook.WebApi.Controllers
                         recipe.IsEnabled = true;
                         recipe.PreparationTime = model.PreparationTime;
 
+                        var recipeImages = DbContext.RecipeImages.Where(x => x.RecipeId == recipe.RecipeId);
+                        foreach (var img in recipeImages)
+                        {
+                            DbContext.RecipeImages.Remove(img);
+                        }
+                        DbContext.SaveChanges();
+
 
                         foreach (var item in model.Photos)
                         {
