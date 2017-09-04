@@ -17,6 +17,7 @@ using Foodbook.WebApi.Models;
 using Foodbook.WebApi.Providers;
 using Foodbook.WebApi.Results;
 using Foodbook.DataAccess;
+using System.Linq;
 
 namespace Foodbook.WebApi.Controllers
 {
@@ -58,12 +59,20 @@ namespace Foodbook.WebApi.Controllers
         public UserInfoViewModel GetUserInfo()
         {
             ExternalLoginData externalLogin = ExternalLoginData.FromIdentity(User.Identity as ClaimsIdentity);
+            string aspUserId = User.Identity.GetUserId();
 
+            Cook cook = null;            
+            using (FoodBookEntities context = new FoodBookEntities())
+            {
+                cook = context.Cooks.FirstOrDefault(x => x.ApsUserId.Equals(aspUserId));
+            }
             return new UserInfoViewModel
             {
                 Email = User.Identity.GetUserName(),
                 HasRegistered = externalLogin == null,
-                LoginProvider = externalLogin != null ? externalLogin.LoginProvider : null
+                LoginProvider = externalLogin != null ? externalLogin.LoginProvider : null,
+                CookFullName = string.Join(" ", cook?.FirstName, cook?.LastName),
+                CookId = cook.CookId
             };
         }
 
