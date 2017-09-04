@@ -30,12 +30,12 @@ namespace Foodbook.DataAccess
         public virtual DbSet<AspNetUserLogin> AspNetUserLogins { get; set; }
         public virtual DbSet<AspNetUser> AspNetUsers { get; set; }
         public virtual DbSet<Caloricity> Caloricities { get; set; }
-        public virtual DbSet<Cook> Cooks { get; set; }
         public virtual DbSet<CookComment> CookComments { get; set; }
+        public virtual DbSet<Cook> Cooks { get; set; }
         public virtual DbSet<Cuisine> Cuisines { get; set; }
         public virtual DbSet<FoodCategory> FoodCategories { get; set; }
-        public virtual DbSet<Recipe> Recipes { get; set; }
         public virtual DbSet<RecipeComment> RecipeComments { get; set; }
         public virtual DbSet<RecipeImage> RecipeImages { get; set; }
+        public virtual DbSet<Recipe> Recipes { get; set; }
     }
 }

@@ -68,7 +68,7 @@ namespace Foodbook.WebApi.Controllers
                     PhotoUrl = string.IsNullOrEmpty(cook.PhotoUrl) ? "chefIcon" : cook.PhotoUrl,
                     Recipes = cook.Recipes.ToList().Select(x => InitRecipeModel(x)).ToList(),
                     FavouriteRecipes = cook.Recipes1.ToList().Select(x => InitRecipeModel(x)).ToList(),
-                    IsFollowed = !cook.ApsUserId.Equals(aspUserId) && cook.Cook1.Any(x => x.ApsUserId.Equals(aspUserId)),
+                    IsFollowed = !cook.ApsUserId.Equals(aspUserId) && cook.Cooks1.Any(x => x.ApsUserId.Equals(aspUserId)),
                     FullName = cook.FirstName + " " + cook.LastName,
                     FollowedCooks = cook.Cooks.Select(x => new CookModel
                     {
@@ -89,7 +89,7 @@ namespace Foodbook.WebApi.Controllers
 
                     }).ToList(),
                     NumberOfRecipes = cook.Recipes.Count,
-                    NumberOfFollowers = cook.Cook1.Count,
+                    NumberOfFollowers = cook.Cooks1.Count,
                     Rating = cook.CookComments.Any() ? (double?)cook.CookComments.Sum(z => z.Rating) / cook.CookComments.Count() : null,
                 }).ToList();
 
