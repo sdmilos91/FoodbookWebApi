@@ -36,6 +36,8 @@ namespace Foodbook.WebApi.Models
         public long CookId { get; set; }
 
         public string CookFullName { get; set; }
+
+        public string PhotoUrl { get; set; }
     }
 
     public class UserLoginInfoViewModel

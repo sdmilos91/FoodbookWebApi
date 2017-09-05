@@ -249,7 +249,8 @@ namespace Foodbook.WebApi.Controllers
                     CookName = string.Join(" ", z.Cook.FirstName, z.Cook.LastName),
                     CommentText = z.CommentText,
                     InsertDate = z.DateInserted,
-                    Rating = z.Rating
+                    Rating = z.Rating,
+                    CookPhotoUrl = string.IsNullOrEmpty(z.Cook.PhotoUrl) ? "chefIcon" : z.Cook.PhotoUrl
 
                 }).ToList(),
                 Photos = x.RecipeImages.Select(z => new PhotoModel

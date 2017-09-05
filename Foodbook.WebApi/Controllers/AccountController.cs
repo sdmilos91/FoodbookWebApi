@@ -72,7 +72,8 @@ namespace Foodbook.WebApi.Controllers
                 HasRegistered = externalLogin == null,
                 LoginProvider = externalLogin != null ? externalLogin.LoginProvider : null,
                 CookFullName = string.Join(" ", cook?.FirstName, cook?.LastName),
-                CookId = cook.CookId
+                CookId = cook.CookId,
+                PhotoUrl = !string.IsNullOrEmpty(cook.PhotoUrl) ? cook.PhotoUrl : "chefIcon"
             };
         }
 

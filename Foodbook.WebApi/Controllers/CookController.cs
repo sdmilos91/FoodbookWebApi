@@ -37,7 +37,7 @@ namespace Foodbook.WebApi.Controllers
                         Biography = cook.Bio,
                         FirstName = cook.FirstName,
                         LastName = cook.LastName,
-                        PhotoUrl = cook.PhotoUrl,
+                        PhotoUrl = string.IsNullOrEmpty(cook.PhotoUrl) ? "chefIcon" : cook.PhotoUrl,
                         Recipes = cook.Recipes.ToList().Select(x => InitRecipeModel(x)).ToList(),
                         FavouriteRecipes = cook.Recipes1.ToList().Select(x => InitRecipeModel(x)).ToList(),
                         FullName = cook.FirstName + " " + cook.LastName,
@@ -56,7 +56,8 @@ namespace Foodbook.WebApi.Controllers
                             CookName = string.Join(" ", z.Cook1.FirstName, z.Cook1.LastName),
                             CommentText = z.CommentText,
                             InsertDate = z.DateInserted,
-                            Rating = z.Rating
+                            Rating = z.Rating,
+                            CookPhotoUrl = string.IsNullOrEmpty(z.Cook.PhotoUrl) ? "chefIcon" : z.Cook.PhotoUrl
 
                         }).ToList(),
                         NumberOfRecipes = cook.Recipes.Count,
@@ -106,7 +107,8 @@ namespace Foodbook.WebApi.Controllers
                         CookName = string.Join(" ", z.Cook1.FirstName, z.Cook1.LastName),
                         CommentText = z.CommentText,
                         InsertDate = z.DateInserted,
-                        Rating = z.Rating
+                        Rating = z.Rating,
+                        CookPhotoUrl = string.IsNullOrEmpty(z.Cook1.PhotoUrl) ? "chefIcon" : z.Cook1.PhotoUrl
 
                     }).ToList(),
                     NumberOfRecipes = cook.Recipes.Count,
@@ -185,7 +187,8 @@ namespace Foodbook.WebApi.Controllers
                     CookName = string.Join(" ", z.Cook.FirstName, z.Cook.LastName),
                     CommentText = z.CommentText,
                     InsertDate = z.DateInserted,
-                    Rating = z.Rating
+                    Rating = z.Rating,
+                    CookPhotoUrl = string.IsNullOrEmpty(z.Cook.PhotoUrl) ? "chefIcon" : z.Cook.PhotoUrl
 
                 }).ToList(),
                 Photos = x.RecipeImages.Select(z => new PhotoModel

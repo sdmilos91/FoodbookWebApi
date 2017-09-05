@@ -31,6 +31,7 @@ namespace Foodbook.WebApi.Models
 
     public class RecipeCommentModel
     {
+        public string CookPhotoUrl;
         public long CommentId { get; set; }
         public int Rating { get; set; }
         public string CommentText { get; set; }
