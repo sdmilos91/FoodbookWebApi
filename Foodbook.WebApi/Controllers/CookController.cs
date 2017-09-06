@@ -1,18 +1,20 @@
 ﻿using Foodbook.DataAccess;
 using Foodbook.WebApi.Models;
+using Foodbook.WebApi.Utils;
 using Microsoft.AspNet.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
 
 namespace Foodbook.WebApi.Controllers
 {
     public class CookController : BaseController
     {
-
+        [Authorize]
         public IHttpActionResult Get(long id)
         {
             try
@@ -78,7 +80,7 @@ namespace Foodbook.WebApi.Controllers
         public IHttpActionResult Get()
         {
             try
-            {
+            {            
                 string aspUserId = User.Identity.GetUserId();
 
                 List<ResponseCookModel> model = DbContext.Cooks.Where(x => x.ApsUserId != aspUserId).ToList().Select(cook => new ResponseCookModel
@@ -176,7 +178,7 @@ namespace Foodbook.WebApi.Controllers
                 Rating = x.RecipeComments.Any() ? (double?)x.RecipeComments.Sum(z => z.Rating) / x.RecipeComments.Count() : null,
                 RecipeText = x.RecipeText,
                 PreparationTime = x.PreparationTime,
-                ProfilePhotoUrl = x.RecipeImages.Any() ? x.RecipeImages.FirstOrDefault().PhotoUrl : "http://kuhinjarecepti.com/wp-content/uploads/2012/01/%C5%A0opska-salata.jpeg",
+                ProfilePhotoUrl = x.RecipeImages.Any() ? x.RecipeImages.FirstOrDefault().PhotoUrl : "recipePlaceholder",
                 IsMine = x.Cook.ApsUserId.Equals(aspUserId),
                 IsFavourite = x.Cooks.Any(z => z.ApsUserId.Equals(aspUserId)),
 

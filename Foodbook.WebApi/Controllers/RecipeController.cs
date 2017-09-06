@@ -238,7 +238,7 @@ namespace Foodbook.WebApi.Controllers
                 Rating = x.RecipeComments.Any() ? (double?)x.RecipeComments.Sum(z => z.Rating) / x.RecipeComments.Count() : null,
                 RecipeText = x.RecipeText,
                 PreparationTime = x.PreparationTime,
-                ProfilePhotoUrl = x.RecipeImages.Any() ? x.RecipeImages.FirstOrDefault().PhotoUrl : "http://kuhinjarecepti.com/wp-content/uploads/2012/01/%C5%A0opska-salata.jpeg",
+                ProfilePhotoUrl = x.RecipeImages.Any() ? x.RecipeImages.FirstOrDefault().PhotoUrl : "recipePlaceholder",
                 IsMine = x.Cook.ApsUserId.Equals(aspUserId),
                 IsFavourite = x.Cooks.Any(z => z.ApsUserId.Equals(aspUserId)),
 
