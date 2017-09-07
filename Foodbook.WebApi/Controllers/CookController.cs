@@ -59,7 +59,7 @@ namespace Foodbook.WebApi.Controllers
                             CommentText = z.CommentText,
                             InsertDate = z.DateInserted,
                             Rating = z.Rating,
-                            CookPhotoUrl = string.IsNullOrEmpty(z.Cook.PhotoUrl) ? "chefIcon" : z.Cook.PhotoUrl
+                            CookPhotoUrl = string.IsNullOrEmpty(z.Cook1.PhotoUrl) ? "chefIcon" : z.Cook.PhotoUrl
 
                         }).ToList(),
                         NumberOfRecipes = cook.Recipes.Count,

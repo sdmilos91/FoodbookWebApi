@@ -264,7 +264,9 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_FavouriteRecept_Cook">
-          <End Role="Cooks" Type="Self.Cooks" Multiplicity="1" />
+          <End Role="Cooks" Type="Self.Cooks" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
           <End Role="FavouriteRecept" Type="Self.FavouriteRecept" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Cooks">
@@ -276,7 +278,9 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_FavouriteRecept_Recipe">
-          <End Role="Recipes" Type="Self.Recipes" Multiplicity="1" />
+          <End Role="Recipes" Type="Self.Recipes" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
           <End Role="FavouriteRecept" Type="Self.FavouriteRecept" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Recipes">
