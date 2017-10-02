@@ -241,7 +241,7 @@ namespace Foodbook.WebApi.Controllers
                 Rating = CalculateRecipeRating(x.RecipeComments),
                 RecipeText = x.RecipeText,
                 PreparationTime = x.PreparationTime,
-                ProfilePhotoUrl = x.RecipeImages.Any() ? x.RecipeImages.FirstOrDefault().PhotoUrl : "recipePlaceholder",
+                ProfilePhotoUrl = x.RecipeImages.Any() ? x.RecipeImages.FirstOrDefault().PhotoUrl : "recipePlaceholder.png",
                 IsMine = x.Cook.ApsUserId.Equals(aspUserId),
                 IsFavourite = x.Cooks.Any(z => z.ApsUserId.Equals(aspUserId)),
                 Ingredients = string.IsNullOrEmpty(x.Ingredients) ? new List<IngredientModel>() : (List<IngredientModel>)Newtonsoft.Json.JsonConvert.DeserializeObject(x.Ingredients, typeof(List<IngredientModel>)),
@@ -254,7 +254,7 @@ namespace Foodbook.WebApi.Controllers
                     CommentText = z.CommentText,
                     InsertDate = z.DateInserted,
                     Rating = z.Rating,
-                    CookPhotoUrl = string.IsNullOrEmpty(z.Cook.PhotoUrl) ? "chefIcon" : z.Cook.PhotoUrl
+                    CookPhotoUrl = string.IsNullOrEmpty(z.Cook.PhotoUrl) ? "chefIcon.png" : z.Cook.PhotoUrl
 
                 }).ToList(),
                 Photos = x.RecipeImages.Select(z => new PhotoModel
