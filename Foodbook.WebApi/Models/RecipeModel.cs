@@ -27,6 +27,8 @@ namespace Foodbook.WebApi.Models
         public List<PhotoModel> Photos { get; set; }
         public bool IsMine { get; set; }
         public bool IsFavourite { get; set; }
+        public ComplexityModel Complexity { get; set; }
+
         public List<IngredientModel> Ingredients { get; set; }
     }
 
@@ -75,6 +77,7 @@ namespace Foodbook.WebApi.Models
         public string VideoUrl { get; set; }
         public long? CaloricityId { get; set; }
         public int PreparationTime { get; set; }
+        public long ComplexityId { get; set; }
         public List<PhotoModel> Photos { get; set; }
         public List<IngredientModel> Ingredients { get; set; }
     }
@@ -93,6 +96,13 @@ namespace Foodbook.WebApi.Models
         public string Name { get; set; }
 
         public string Value { get; set; }
+    }
+
+    public class ComplexityModel
+    {
+        public long ComplexityId { get; set; }
+
+        public string Name { get; set; }
     }
 }
 

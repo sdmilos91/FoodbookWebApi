@@ -181,6 +181,11 @@ namespace Foodbook.WebApi.Controllers
                 ProfilePhotoUrl = x.RecipeImages.Any() ? x.RecipeImages.FirstOrDefault().PhotoUrl : "recipePlaceholder.png",
                 IsMine = x.Cook.ApsUserId.Equals(aspUserId),
                 IsFavourite = x.Cooks.Any(z => z.ApsUserId.Equals(aspUserId)),
+                Complexity = new ComplexityModel
+                {
+                    ComplexityId = x.Complexity.ComplexityId,
+                    Name = x.Complexity.Name
+                },
                 Ingredients = string.IsNullOrEmpty(x.Ingredients) ? new List<IngredientModel>() : (List<IngredientModel>)Newtonsoft.Json.JsonConvert.DeserializeObject(x.Ingredients, typeof(List<IngredientModel>)),
                 Comments = x.RecipeComments.ToList().Select(z => new RecipeCommentModel
                 {

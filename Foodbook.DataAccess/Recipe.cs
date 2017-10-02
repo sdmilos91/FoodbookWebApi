@@ -34,8 +34,10 @@ namespace Foodbook.DataAccess
         public bool IsEnabled { get; set; }
         public int PreparationTime { get; set; }
         public string Ingredients { get; set; }
+        public long ComplexityId { get; set; }
     
         public virtual Caloricity Caloricity { get; set; }
+        public virtual Complexity Complexity { get; set; }
         public virtual Cook Cook { get; set; }
         public virtual Cuisine Cuisine { get; set; }
         public virtual FoodCategory FoodCategory { get; set; }

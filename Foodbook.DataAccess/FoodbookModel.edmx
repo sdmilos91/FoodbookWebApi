@@ -65,6 +65,13 @@
           <Property Name="MaxValue" Type="int" />
           <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
         </EntityType>
+        <EntityType Name="Complexity">
+          <Key>
+            <PropertyRef Name="ComplexityId" />
+          </Key>
+          <Property Name="ComplexityId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
         <EntityType Name="CookComments">
           <Key>
             <PropertyRef Name="CommentId" />
@@ -155,6 +162,7 @@
           <Property Name="IsEnabled" Type="bit" Nullable="false" />
           <Property Name="PreparationTime" Type="int" Nullable="false" />
           <Property Name="Ingredients" Type="nvarchar(max)" />
+          <Property Name="ComplexityId" Type="bigint" Nullable="false" />
         </EntityType>
         <Association Name="FK_Comment_Cook">
           <End Role="Cooks" Type="Self.Cooks" Multiplicity="1">
@@ -368,6 +376,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Recipes_Complexity">
+          <End Role="Complexity" Type="Self.Complexity" Multiplicity="1" />
+          <End Role="Recipes" Type="Self.Recipes" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Complexity">
+              <PropertyRef Name="ComplexityId" />
+            </Principal>
+            <Dependent Role="Recipes">
+              <PropertyRef Name="ComplexityId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Table_1_Cuisine">
           <End Role="Cuisines" Type="Self.Cuisines" Multiplicity="1" />
           <End Role="Recipes" Type="Self.Recipes" Multiplicity="*" />
@@ -399,6 +419,7 @@
           <EntitySet Name="AspNetUserRoles" EntityType="Self.AspNetUserRoles" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="AspNetUsers" EntityType="Self.AspNetUsers" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Caloricities" EntityType="Self.Caloricities" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Complexity" EntityType="Self.Complexity" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="CookComments" EntityType="Self.CookComments" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Cooks" EntityType="Self.Cooks" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Cuisines" EntityType="Self.Cuisines" Schema="dbo" store:Type="Tables" />
@@ -472,6 +493,10 @@
             <End Role="Recipes" EntitySet="Recipes" />
             <End Role="RecipeImages" EntitySet="RecipeImages" />
           </AssociationSet>
+          <AssociationSet Name="FK_Recipes_Complexity" Association="Self.FK_Recipes_Complexity">
+            <End Role="Complexity" EntitySet="Complexity" />
+            <End Role="Recipes" EntitySet="Recipes" />
+          </AssociationSet>
           <AssociationSet Name="FK_Table_1_Cuisine" Association="Self.FK_Table_1_Cuisine">
             <End Role="Cuisines" EntitySet="Cuisines" />
             <End Role="Recipes" EntitySet="Recipes" />
@@ -491,6 +516,7 @@
           <EntitySet Name="AspNetUserLogins" EntityType="FoodBookModel.AspNetUserLogin" />
           <EntitySet Name="AspNetUsers" EntityType="FoodBookModel.AspNetUser" />
           <EntitySet Name="Caloricities" EntityType="FoodBookModel.Caloricity" />
+          <EntitySet Name="Complexities" EntityType="FoodBookModel.Complexity" />
           <EntitySet Name="CookComments" EntityType="FoodBookModel.CookComment" />
           <EntitySet Name="Cooks" EntityType="FoodBookModel.Cook" />
           <EntitySet Name="Cuisines" EntityType="FoodBookModel.Cuisine" />
@@ -512,6 +538,10 @@
           </AssociationSet>
           <AssociationSet Name="FK_Recipe_Caloricity" Association="FoodBookModel.FK_Recipe_Caloricity">
             <End Role="Caloricity" EntitySet="Caloricities" />
+            <End Role="Recipe" EntitySet="Recipes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Recipes_Complexity" Association="FoodBookModel.FK_Recipes_Complexity">
+            <End Role="Complexity" EntitySet="Complexities" />
             <End Role="Recipe" EntitySet="Recipes" />
           </AssociationSet>
           <AssociationSet Name="FK_CookComment_Cook" Association="FoodBookModel.FK_CookComment_Cook">
@@ -619,6 +649,14 @@
           <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Recipes" Relationship="FoodBookModel.FK_Recipe_Caloricity" FromRole="Caloricity" ToRole="Recipe" />
         </EntityType>
+        <EntityType Name="Complexity">
+          <Key>
+            <PropertyRef Name="ComplexityId" />
+          </Key>
+          <Property Name="ComplexityId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Recipes" Relationship="FoodBookModel.FK_Recipes_Complexity" FromRole="Complexity" ToRole="Recipe" />
+        </EntityType>
         <EntityType Name="CookComment">
           <Key>
             <PropertyRef Name="CommentId" />
@@ -708,7 +746,9 @@
           <Property Name="IsEnabled" Type="Boolean" Nullable="false" />
           <Property Name="PreparationTime" Type="Int32" Nullable="false" />
           <Property Name="Ingredients" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ComplexityId" Type="Int64" Nullable="false" />
           <NavigationProperty Name="Caloricity" Relationship="FoodBookModel.FK_Recipe_Caloricity" FromRole="Recipe" ToRole="Caloricity" />
+          <NavigationProperty Name="Complexity" Relationship="FoodBookModel.FK_Recipes_Complexity" FromRole="Recipe" ToRole="Complexity" />
           <NavigationProperty Name="Cook" Relationship="FoodBookModel.FK_Recipe_Cook" FromRole="Recipe" ToRole="Cook" />
           <NavigationProperty Name="Cuisine" Relationship="FoodBookModel.FK_Table_1_Cuisine" FromRole="Recipe" ToRole="Cuisine" />
           <NavigationProperty Name="FoodCategory" Relationship="FoodBookModel.FK_Table_1_FoodCategory" FromRole="Recipe" ToRole="FoodCategory" />
@@ -765,6 +805,18 @@
             </Principal>
             <Dependent Role="Recipe">
               <PropertyRef Name="CaloricityId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Recipes_Complexity">
+          <End Type="FoodBookModel.Complexity" Role="Complexity" Multiplicity="1" />
+          <End Type="FoodBookModel.Recipe" Role="Recipe" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Complexity">
+              <PropertyRef Name="ComplexityId" />
+            </Principal>
+            <Dependent Role="Recipe">
+              <PropertyRef Name="ComplexityId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -945,6 +997,14 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="Complexities">
+            <EntityTypeMapping TypeName="FoodBookModel.Complexity">
+              <MappingFragment StoreEntitySet="Complexity">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ComplexityId" ColumnName="ComplexityId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="CookComments">
             <EntityTypeMapping TypeName="FoodBookModel.CookComment">
               <MappingFragment StoreEntitySet="CookComments">
@@ -1012,6 +1072,7 @@
           <EntitySetMapping Name="Recipes">
             <EntityTypeMapping TypeName="FoodBookModel.Recipe">
               <MappingFragment StoreEntitySet="Recipes">
+                <ScalarProperty Name="ComplexityId" ColumnName="ComplexityId" />
                 <ScalarProperty Name="Ingredients" ColumnName="Ingredients" />
                 <ScalarProperty Name="PreparationTime" ColumnName="PreparationTime" />
                 <ScalarProperty Name="IsEnabled" ColumnName="IsEnabled" />

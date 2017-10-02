@@ -67,6 +67,9 @@
     <Compile Include="Caloricity.cs">
       <DependentUpon>FoodBookModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Complexity.cs">
+      <DependentUpon>FoodBookModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Cook.cs">
       <DependentUpon>FoodBookModel.tt</DependentUpon>
     </Compile>

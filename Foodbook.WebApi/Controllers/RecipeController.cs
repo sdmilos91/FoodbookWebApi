@@ -105,6 +105,7 @@ namespace Foodbook.WebApi.Controllers
                         InsertDate = DateTime.UtcNow,
                         IsEnabled = true,
                         PreparationTime = model.PreparationTime,
+                        ComplexityId = model.ComplexityId == 0 ? 1 : model.ComplexityId,
                         Ingredients = JsonConvert.SerializeObject(model.Ingredients)  
                     };
 
@@ -158,6 +159,7 @@ namespace Foodbook.WebApi.Controllers
                         recipe.IsEnabled = true;
                         recipe.PreparationTime = model.PreparationTime;
                         recipe.Ingredients = JsonConvert.SerializeObject(model.Ingredients);
+                        recipe.ComplexityId = model.ComplexityId == 0 ? 1 : model.ComplexityId;
 
                         var recipeImages = DbContext.RecipeImages.Where(x => x.RecipeId == recipe.RecipeId);
                         foreach (var img in recipeImages)
@@ -244,6 +246,11 @@ namespace Foodbook.WebApi.Controllers
                 ProfilePhotoUrl = x.RecipeImages.Any() ? x.RecipeImages.FirstOrDefault().PhotoUrl : "recipePlaceholder.png",
                 IsMine = x.Cook.ApsUserId.Equals(aspUserId),
                 IsFavourite = x.Cooks.Any(z => z.ApsUserId.Equals(aspUserId)),
+                Complexity = new ComplexityModel
+                {
+                    ComplexityId = x.Complexity.ComplexityId,
+                    Name = x.Complexity.Name
+                },
                 Ingredients = string.IsNullOrEmpty(x.Ingredients) ? new List<IngredientModel>() : (List<IngredientModel>)Newtonsoft.Json.JsonConvert.DeserializeObject(x.Ingredients, typeof(List<IngredientModel>)),
 
             Comments = x.RecipeComments.ToList().Select(z => new RecipeCommentModel
