@@ -1,18 +1,23 @@
-﻿using System;
+﻿using Foodbook.WebApi.Utils;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
 
 namespace Foodbook.WebApi.Controllers
-{
-    [Authorize]
+{    
     public class ValuesController : ApiController
     {
         // GET api/values
         public IEnumerable<string> Get()
         {
+            Task.Run(() => 
+            {
+                NotificationHubHelper.SendNotificationAsync("apns", "test", "test");
+            });
             return new string[] { "value1", "value2" };
         }
 

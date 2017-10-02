@@ -154,6 +154,7 @@
           <Property Name="InsertDate" Type="datetime" Nullable="false" />
           <Property Name="IsEnabled" Type="bit" Nullable="false" />
           <Property Name="PreparationTime" Type="int" Nullable="false" />
+          <Property Name="Ingredients" Type="nvarchar(max)" />
         </EntityType>
         <Association Name="FK_Comment_Cook">
           <End Role="Cooks" Type="Self.Cooks" Multiplicity="1">
@@ -706,6 +707,7 @@
           <Property Name="InsertDate" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="IsEnabled" Type="Boolean" Nullable="false" />
           <Property Name="PreparationTime" Type="Int32" Nullable="false" />
+          <Property Name="Ingredients" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Caloricity" Relationship="FoodBookModel.FK_Recipe_Caloricity" FromRole="Recipe" ToRole="Caloricity" />
           <NavigationProperty Name="Cook" Relationship="FoodBookModel.FK_Recipe_Cook" FromRole="Recipe" ToRole="Cook" />
           <NavigationProperty Name="Cuisine" Relationship="FoodBookModel.FK_Table_1_Cuisine" FromRole="Recipe" ToRole="Cuisine" />
@@ -1010,6 +1012,7 @@
           <EntitySetMapping Name="Recipes">
             <EntityTypeMapping TypeName="FoodBookModel.Recipe">
               <MappingFragment StoreEntitySet="Recipes">
+                <ScalarProperty Name="Ingredients" ColumnName="Ingredients" />
                 <ScalarProperty Name="PreparationTime" ColumnName="PreparationTime" />
                 <ScalarProperty Name="IsEnabled" ColumnName="IsEnabled" />
                 <ScalarProperty Name="InsertDate" ColumnName="InsertDate" />

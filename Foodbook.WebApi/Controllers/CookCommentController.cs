@@ -44,6 +44,7 @@ namespace Foodbook.WebApi.Controllers
                     Task.Run(() =>
                     {
                         NotificationHubHelper.SendNotificationAsync("gcm", string.Format("Novi komentar je dodat za vaš profil."), commentedCookEmail);
+                        NotificationHubHelper.SendNotificationAsync("apns", string.Format("Novi komentar je dodat za vaš profil."), commentedCookEmail);
                     });
 
                     return Ok();

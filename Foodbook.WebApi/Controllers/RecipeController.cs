@@ -1,6 +1,7 @@
 ﻿using Foodbook.DataAccess;
 using Foodbook.WebApi.Models;
 using Microsoft.AspNet.Identity;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -103,7 +104,8 @@ namespace Foodbook.WebApi.Controllers
                         CaloricityId = model.CaloricityId,
                         InsertDate = DateTime.UtcNow,
                         IsEnabled = true,
-                        PreparationTime = model.PreparationTime
+                        PreparationTime = model.PreparationTime,
+                        Ingredients = JsonConvert.SerializeObject(model.Ingredients)  
                     };
 
                     recipe.RecipeImages.Clear();
@@ -155,6 +157,7 @@ namespace Foodbook.WebApi.Controllers
                         recipe.CaloricityId = model.CaloricityId;
                         recipe.IsEnabled = true;
                         recipe.PreparationTime = model.PreparationTime;
+                        recipe.Ingredients = JsonConvert.SerializeObject(model.Ingredients);
 
                         var recipeImages = DbContext.RecipeImages.Where(x => x.RecipeId == recipe.RecipeId);
                         foreach (var img in recipeImages)
@@ -235,14 +238,15 @@ namespace Foodbook.WebApi.Controllers
                 CookName = string.Join(" ", x.Cook.FirstName, x.Cook.LastName),
                 VideoUrl = x.VideoUrl,
                 InsertDate = x.InsertDate,
-                Rating = x.RecipeComments.Any() ? (double?)x.RecipeComments.Sum(z => z.Rating) / x.RecipeComments.Count() : null,
+                Rating = CalculateRecipeRating(x.RecipeComments),
                 RecipeText = x.RecipeText,
                 PreparationTime = x.PreparationTime,
                 ProfilePhotoUrl = x.RecipeImages.Any() ? x.RecipeImages.FirstOrDefault().PhotoUrl : "recipePlaceholder",
                 IsMine = x.Cook.ApsUserId.Equals(aspUserId),
                 IsFavourite = x.Cooks.Any(z => z.ApsUserId.Equals(aspUserId)),
+                Ingredients = string.IsNullOrEmpty(x.Ingredients) ? new List<IngredientModel>() : (List<IngredientModel>)Newtonsoft.Json.JsonConvert.DeserializeObject(x.Ingredients, typeof(List<IngredientModel>)),
 
-                Comments = x.RecipeComments.ToList().Select(z => new RecipeCommentModel
+            Comments = x.RecipeComments.ToList().Select(z => new RecipeCommentModel
                 {
                     CommentId = z.CommentId,
                     CookId = z.CookId,
@@ -258,6 +262,23 @@ namespace Foodbook.WebApi.Controllers
                     Url = z.PhotoUrl
                 }).ToList()
             };
+        }
+
+        private double? CalculateRecipeRating(ICollection<RecipeComment> comments)
+        {
+            if (comments.Any())
+            {
+                var groupedComments = comments.GroupBy(x => x.CookId);
+                List<double> rating = new List<double>();
+                foreach (var item in groupedComments)
+                {
+                    rating.Add(item.Average(x => x.Rating));
+                }
+
+                return Math.Round(rating.Average(), 2);
+            }
+
+            return null;
         }
     }
 }

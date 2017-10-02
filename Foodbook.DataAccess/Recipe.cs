@@ -33,6 +33,7 @@ namespace Foodbook.DataAccess
         public System.DateTime InsertDate { get; set; }
         public bool IsEnabled { get; set; }
         public int PreparationTime { get; set; }
+        public string Ingredients { get; set; }
     
         public virtual Caloricity Caloricity { get; set; }
         public virtual Cook Cook { get; set; }

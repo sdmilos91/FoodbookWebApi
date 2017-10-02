@@ -39,7 +39,7 @@ namespace Foodbook.WebApi.Controllers
                         Biography = cook.Bio,
                         FirstName = cook.FirstName,
                         LastName = cook.LastName,
-                        PhotoUrl = string.IsNullOrEmpty(cook.PhotoUrl) ? "chefIcon" : cook.PhotoUrl,
+                        PhotoUrl = string.IsNullOrEmpty(cook.PhotoUrl) ? "chefIcon.png" : cook.PhotoUrl,
                         Recipes = cook.Recipes.ToList().Select(x => InitRecipeModel(x)).ToList(),
                         FavouriteRecipes = cook.Recipes1.ToList().Select(x => InitRecipeModel(x)).ToList(),
                         FullName = cook.FirstName + " " + cook.LastName,
@@ -59,12 +59,12 @@ namespace Foodbook.WebApi.Controllers
                             CommentText = z.CommentText,
                             InsertDate = z.DateInserted,
                             Rating = z.Rating,
-                            CookPhotoUrl = string.IsNullOrEmpty(z.Cook1.PhotoUrl) ? "chefIcon" : z.Cook.PhotoUrl
+                            CookPhotoUrl = string.IsNullOrEmpty(z.Cook1.PhotoUrl) ? "chefIcon.png" : z.Cook.PhotoUrl
 
                         }).ToList(),
                         NumberOfRecipes = cook.Recipes.Count,
                         NumberOfFollowers = cook.Cooks1.Count,
-                        Rating = cook.CookComments.Any() ? (double?)cook.CookComments.Sum(z => z.Rating) / cook.CookComments.Count() : null,
+                        Rating = CalculateCookRating(cook.CookComments)
                     };
 
                     return Ok(model);
@@ -89,7 +89,7 @@ namespace Foodbook.WebApi.Controllers
                     Biography = cook.Bio,
                     FirstName = cook.FirstName,
                     LastName = cook.LastName,
-                    PhotoUrl = string.IsNullOrEmpty(cook.PhotoUrl) ? "chefIcon" : cook.PhotoUrl,
+                    PhotoUrl = string.IsNullOrEmpty(cook.PhotoUrl) ? "chefIcon.png" : cook.PhotoUrl,
                     Recipes = cook.Recipes.ToList().Select(x => InitRecipeModel(x)).ToList(),
                     FavouriteRecipes = cook.Recipes1.ToList().Select(x => InitRecipeModel(x)).ToList(),
                     IsFollowed = !cook.ApsUserId.Equals(aspUserId) && cook.Cooks1.Any(x => x.ApsUserId.Equals(aspUserId)),
@@ -110,12 +110,12 @@ namespace Foodbook.WebApi.Controllers
                         CommentText = z.CommentText,
                         InsertDate = z.DateInserted,
                         Rating = z.Rating,
-                        CookPhotoUrl = string.IsNullOrEmpty(z.Cook1.PhotoUrl) ? "chefIcon" : z.Cook1.PhotoUrl
+                        CookPhotoUrl = string.IsNullOrEmpty(z.Cook1.PhotoUrl) ? "chefIcon.png" : z.Cook1.PhotoUrl
 
                     }).ToList(),
                     NumberOfRecipes = cook.Recipes.Count,
                     NumberOfFollowers = cook.Cooks1.Count,
-                    Rating = cook.CookComments.Any() ? (double?)cook.CookComments.Sum(z => z.Rating) / cook.CookComments.Count() : null,
+                    Rating = CalculateCookRating(cook.CookComments)
                 }).ToList();
 
                 return Ok(model);
@@ -175,13 +175,13 @@ namespace Foodbook.WebApi.Controllers
                 CookName = string.Join(" ", x.Cook.FirstName, x.Cook.LastName),
                 VideoUrl = x.VideoUrl,
                 InsertDate = x.InsertDate,
-                Rating = x.RecipeComments.Any() ? (double?)x.RecipeComments.Sum(z => z.Rating) / x.RecipeComments.Count() : null,
+                Rating = CalculateRecipeRating(x.RecipeComments),
                 RecipeText = x.RecipeText,
                 PreparationTime = x.PreparationTime,
-                ProfilePhotoUrl = x.RecipeImages.Any() ? x.RecipeImages.FirstOrDefault().PhotoUrl : "recipePlaceholder",
+                ProfilePhotoUrl = x.RecipeImages.Any() ? x.RecipeImages.FirstOrDefault().PhotoUrl : "recipePlaceholder.png",
                 IsMine = x.Cook.ApsUserId.Equals(aspUserId),
                 IsFavourite = x.Cooks.Any(z => z.ApsUserId.Equals(aspUserId)),
-
+                Ingredients = string.IsNullOrEmpty(x.Ingredients) ? new List<IngredientModel>() : (List<IngredientModel>)Newtonsoft.Json.JsonConvert.DeserializeObject(x.Ingredients, typeof(List<IngredientModel>)),
                 Comments = x.RecipeComments.ToList().Select(z => new RecipeCommentModel
                 {
                     CommentId = z.CommentId,
@@ -190,7 +190,7 @@ namespace Foodbook.WebApi.Controllers
                     CommentText = z.CommentText,
                     InsertDate = z.DateInserted,
                     Rating = z.Rating,
-                    CookPhotoUrl = string.IsNullOrEmpty(z.Cook.PhotoUrl) ? "chefIcon" : z.Cook.PhotoUrl
+                    CookPhotoUrl = string.IsNullOrEmpty(z.Cook.PhotoUrl) ? "chefIcon.png" : z.Cook.PhotoUrl
 
                 }).ToList(),
                 Photos = x.RecipeImages.Select(z => new PhotoModel
@@ -200,6 +200,38 @@ namespace Foodbook.WebApi.Controllers
             };
         }
 
+        private double? CalculateCookRating(ICollection<CookComment> comments)
+        {
+            if (comments.Any())
+            {
+                var groupedComments = comments.GroupBy(x => x.CommentOwnerId);
+                List<double> rating = new List<double>();
+                foreach (var item in groupedComments)
+                {
+                    rating.Add(item.Average(x => x.Rating));
+                }
 
+                return Math.Round(rating.Average(), 2);
+            }
+
+            return null;
+        }
+
+        private double? CalculateRecipeRating(ICollection<RecipeComment> comments)
+        {
+            if (comments.Any())
+            {
+                var groupedComments = comments.GroupBy(x => x.CookId);
+                List<double> rating = new List<double>();
+                foreach (var item in groupedComments)
+                {
+                    rating.Add(item.Average(x => x.Rating));
+                }
+
+                return Math.Round(rating.Average(), 2);
+            }
+
+            return null;
+        }
     }
 }
